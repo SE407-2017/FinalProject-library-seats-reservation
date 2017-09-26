@@ -1,26 +1,90 @@
-# Laravel PHP Framework
+# Library Reservation
+## Guide
+### Development pre-request
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+必须:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+In Windows:
+- PHP Composer (https://getcomposer.org/) (推荐中国镜像: https://pkg.phpcomposer.com/#how-to-install-composer)
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+推荐开发环境:
 
-## Official Documentation
+In Windows:
+- xampp (https://www.apachefriends.org/xampp-files/5.6.31/xampp-win32-5.6.31-0-VC11-installer.exe)
+- PHPStorm (https://www.jetbrains.com/phpstorm/)
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+确保php.exe所在目录已添加到PATH环境变量
 
-## Contributing
+### Getting start
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+(Windows下建议在Powershell或Git Bash中进行操作)
 
-## Security Vulnerabilities
+1. fork这个代码仓库
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+2. 将代码clone到本地
+    ```
+    git clone https://github.com/你的用户名/FinalProject-library-reservation
+    ```
+
+3. 切换到项目目录
+    ```
+    cd FinalProject-library-reservation
+    ```
+
+4. 安装依赖包
+    ```
+    composer install
+    ```
+
+5. 创建环境配置文件
+    ```
+    mv .env.example .env
+    ```
+6. 打开xampp控制面板, 点击Apache->Config->Apache (httpd.conf), 找到
+    ```
+    Listen 80
+    ```
+    在其下方添加一行:
+    ```
+    Listen 8081
+    ```
+    保存退出, 再点击Apache->Config-> Browse [Apache], 打开conf\extra\httpd-vhosts.conf, 添加如下行:
+    ```
+    <VirtualHost *:8081>
+        ServerAdmin webmaster@localhost
+        DocumentRoot "[项目目录]/public"
+        ServerName localhost
+        ErrorLog "logs/localhost-error.log"
+        CustomLog "logs/localhost-access.log" common
+    </VirtualHost>
+    ```
+    保存退出, 重启Apache。
+    
+    xampp控制面板中点击MySQL->Start, MySQL->Admin, 左侧点击New, Database name填library-reservation, 点击Create.
+
+7. 用PHPStorm打开项目
+
+8. 打开.env文件, 修改如下行 (若使用xampp可直接复制以下配置):
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=library-reservation
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
+
+9. 迁移数据库:
+    ```
+    php artisan migrate
+    ```
+
+10. 生成key:
+    ```
+    php artisan key:generate
+    ```
+
+11. 打开浏览器, 访问http://localhost:8081, enjoy!
 
 ## License
 
