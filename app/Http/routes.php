@@ -15,4 +15,13 @@
     return view('welcome');
 }); */
 
-Route::get('/', 'JaccountController@login');
+Route::get('/', 'Auth\JaccountController@login');
+Route::get('/auth/login', 'Auth\JaccountController@login');
+
+Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
+    Route::get('/home', 'ReserveController@index');
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
+    Route::get('/home', 'AdminController@index');
+});

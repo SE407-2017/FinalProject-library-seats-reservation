@@ -61,7 +61,7 @@ class JaccountController extends Controller
 
         Auth::attempt($credentials);
 
-        return redirect('/redirect');
+        return redirect('/reserve/home');
     }
 
     public function logout(Request $request)

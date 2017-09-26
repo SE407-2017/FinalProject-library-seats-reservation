@@ -19,7 +19,7 @@ class AuthAdmin
             if ($request->ajax()) {
                 return response('Unauthorized.', 403);
             } else {
-                return redirect()->guest('/');
+                return redirect()->guest('/forbidden');
             }
         }
         return $next($request);
