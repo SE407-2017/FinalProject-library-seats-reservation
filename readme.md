@@ -2,18 +2,16 @@
 ## Guide
 ### Development pre-request
 
-必须:
-
-In Windows:
-- PHP Composer (https://getcomposer.org/) (推荐中国镜像: https://pkg.phpcomposer.com/#how-to-install-composer)
-
 推荐开发环境:
 
 In Windows:
 - xampp (https://www.apachefriends.org/xampp-files/5.6.31/xampp-win32-5.6.31-0-VC11-installer.exe)
 - PHPStorm (https://www.jetbrains.com/phpstorm/)
+- 必须: PHP Composer (https://getcomposer.org/) (推荐中国镜像: https://pkg.phpcomposer.com/#how-to-install-composer)
 
-确保php.exe所在目录已添加到PATH环境变量
+确保php.exe所在目录已添加到PATH环境变量。
+
+以上为推荐开发环境, 以下向导以此为基础。使用其他环境亦可, 但必须至少安装1. Apache / Nginx, 2. MySQL, 3. PHP5
 
 ### Getting start
 
