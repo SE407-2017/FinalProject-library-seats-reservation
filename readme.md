@@ -21,12 +21,12 @@ In Windows:
 
 2. 将代码clone到本地
     ```
-    git clone https://github.com/你的用户名/FinalProject-library-reservation
+    git clone https://github.com/你的用户名/FinalProject-library-seats-reservation
     ```
 
 3. 切换到项目目录
     ```
-    cd FinalProject-library-reservation
+    cd FinalProject-library-seats-reservation
     ```
 
 4. 安装依赖包
