@@ -20,7 +20,7 @@ use Response;
 use Session;
 use Illuminate\Support\Facades\Storage;
 
-class AdviceController extends Controller
+class ReserveController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,12 +29,15 @@ class AdviceController extends Controller
      */
     public function index()
     {
-        $advice = Advice::where('jaccount', Session::get("jaccount"))->orderBy('id', 'desc')->limit(50)->get();
-        return view('advice/home')->with(array(
-            "count" => $advice->count(),
-            "advices" => $advice,
-            "true_name" => iconv("gbk", "utf-8", Session::get("true_name")),
-        ));
+        $user = array(
+            'true_name' => Session::get('true_name'),
+            'student_id' => Session::get('student_id'),
+            'jaccount' => Session::get('jaccount'),
+        );
+        return view('reserve/home')->with(array(
+            'user_info' => $user,
+            )
+        );
     }
 
     public function logout()

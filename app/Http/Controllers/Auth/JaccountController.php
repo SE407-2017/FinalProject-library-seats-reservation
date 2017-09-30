@@ -44,7 +44,6 @@ class JaccountController extends Controller
             $user->name = $ht['uid'];
             $user->password = Hash::make('jaccount.password');
             $user->email = $email;
-            $user->type = ($isStudent) ? 1 : 0;
             $user->is_admin = 0;
             $user->save();
             
