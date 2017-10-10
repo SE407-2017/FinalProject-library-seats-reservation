@@ -13,9 +13,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\AdviceType;
-use App\Advice;
-use App\Canteen;
+use App\Reservations;
 use Response;
 use Session;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +36,30 @@ class ReserveController extends Controller
             'user_info' => $user,
             )
         );
+    }
+
+    public function checkReservation($request)
+    {
+        $is_valid = true;
+        if (Floor::where('id', $request->floor_id)) {
+            $is_valid = false;
+        }
+        return $is_valid;
+    }
+
+    public function apiReservationAdd(Request $request)
+    {
+        $reservation = new Reservations(array(
+            'name' => Session::get('true_name'),
+            'jaccount' => Session::get('jaccount'),
+            'floor_id' => $request->floor_id,
+            'table_id' => $request->table_id,
+            'seat_id' => $request->seat_id,
+            'arrive_at' => $request->arrive_at,
+            'is_arrive' => false,
+            'is_left' => false,
+        ));
+        $reservation->save();
     }
 
     public function logout()

@@ -26,7 +26,7 @@ class JaccountController extends Controller
         // $ht = JaHelper::jalogin($jatkt,'/');
         isset($ht['uid']) ? ($jaccount_id = $ht['uid']) : exit;
 
-        Session::put('true_name', $ht['chinesename']);
+        Session::put('true_name', iconv("GB2312//IGNORE", "UTF-8", $ht['chinesename']));
         Session::put('student_id', $ht['id']);
         Session::put('jaccount', $ht['uid']);
 
