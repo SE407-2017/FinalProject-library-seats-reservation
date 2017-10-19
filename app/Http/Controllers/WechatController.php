@@ -35,6 +35,34 @@ class WechatController extends Controller
 
     }
 
+    public function apiLeaveSeat(Request $request) {
+        $success = true;
+        $err_msg = "";
+
+        $wxid = $request->wxid;
+        if (Wechat::where("wxid", $wxid)->count() == 0) {
+            $success = false;
+            $err_msg = "微信号未绑定Jaccount";
+        } else {
+            $user = Wechat::where("wxid", $wxid)->first();
+            $going_on_resv = Reservations::where("jaccount", $user->jaccount)->where("is_left", 0);
+            if ($going_on_resv->count() == 0) {
+                $success = false;
+                $err_msg = "当前没有进行中预约";
+            } else {
+                $going_on_resv = $going_on_resv->first();
+                $going_on_resv->is_left = 1;
+                $going_on_resv->save();
+            }
+        }
+
+        return Response::json(array(
+            "success" => $success,
+            "msg" => $err_msg,
+        ));
+
+    }
+
     public function logout()
     {
         Auth::logout();
