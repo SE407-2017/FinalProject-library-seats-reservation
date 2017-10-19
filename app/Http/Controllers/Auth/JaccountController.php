@@ -39,7 +39,7 @@ class JaccountController extends Controller
             $realName=mb_convert_encoding($realName,'UTF-8','GBK');
             $dept=mb_convert_encoding($dept,'UTF-8','GBK');
             $email = $ht['uid']."@sjtu.edu.cn";
-            
+
             $user = new User;
             $user->name = $ht['uid'];
             $user->password = Hash::make('jaccount.password');
@@ -67,6 +67,11 @@ class JaccountController extends Controller
     {
         Auth::logout();
         JaHelper::jalogout($request->query('redirect', ''));
+    }
+
+    public function forbidden()
+    {
+        return view('forbidden');
     }
 
     public function redirect()
