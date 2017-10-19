@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Reservations;
 use App\Floors;
 use App\Tables;
+use App\Wechat;
 
 use Response;
 use Session;

@@ -40,5 +40,5 @@ Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function
 });
 
 Route::group(['prefix' => 'api/wechat'], function() {
-    Route::get('/leave', 'WechatController@apiLeaveSeat');
+    Route::post('/leave', 'WechatController@apiLeaveSeat');
 });
