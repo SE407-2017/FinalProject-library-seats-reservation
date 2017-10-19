@@ -38,3 +38,7 @@ Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function
     Route::get('/tables/remove/{table_id}', 'AdminController@apiTablesRemove');
     Route::post('/tables/add', 'AdminController@apiTablesAdd');
 });
+
+Route::group(['prefix' => 'api/wechat'], function() {
+    Route::get('/leave', 'WechatController@apiLeaveSeat');
+});
