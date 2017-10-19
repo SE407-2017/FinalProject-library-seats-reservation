@@ -69,6 +69,11 @@ class JaccountController extends Controller
         JaHelper::jalogout($request->query('redirect', ''));
     }
 
+    public function forbidden()
+    {
+        return view('forbidden');
+    }
+
     public function redirect()
     {
         if (Auth::check()) {
