@@ -21,6 +21,7 @@ Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
 Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
     Route::get('/home', 'ReserveController@index');
+    Route::get('/detail', 'ReserveController@showDetail');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {

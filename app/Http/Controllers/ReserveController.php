@@ -103,6 +103,20 @@ class ReserveController extends Controller
         }
     }
 
+    public function showDetail()
+    {
+        $all_reservations = Reservations::where('jaccount',Session::get('jaccount'))->orderBy('arrive_at','desc')->get() ;
+        $user_info = array(
+            'true_name' => Session::get('true_name'),
+            'student_id' => Session::get('student_id'),
+            'jaccount' => Session::get('jaccount'),
+        );
+        return view('reserve/detail',compact('user_info','all_reservations'));
+    }
+
+
+
+
     public function logout()
     {
         Auth::logout();
