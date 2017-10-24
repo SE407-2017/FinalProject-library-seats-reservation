@@ -1,0 +1,22 @@
+<div class="sidebar" ng-controller="mainControl">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" ui-sref-active="active" ui-sref="app.main"><i class="icon-speedometer"></i> 欢迎</a>
+            </li>
+
+            <li class="divider"></li>
+            <li class="nav-title">
+                预约
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ui-sref-active="active" ui-sref="app.reservation_add"><i class="icon-calculator"></i> 开始预约</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ui-sref-active="active" ui-sref="app.reservation_all"><i class="icon-calculator"></i> 所有预约 <span class="badge badge-info" ng-bind="reservations__count"></span></a>
+            </li>
+
+
+        </ul>
+    </nav>
+</div>

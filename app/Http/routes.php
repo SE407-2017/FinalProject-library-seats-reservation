@@ -17,11 +17,11 @@
 
 Route::get('/', 'Auth\JaccountController@login');
 Route::get('/auth/login', 'Auth\JaccountController@login');
+Route::get('/auth/logout', 'Auth\JaccountController@logout');
 Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
 Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
     Route::get('/home', 'ReserveController@index');
-    Route::get('/detail', 'ReserveController@showDetail');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
@@ -29,7 +29,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
 });
 
 Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
+    Route::get('/info', 'ReserveController@apiUserInfo');
     Route::post('/reservation/add', 'ReserveController@apiReservationAdd');
+    Route::get('/reservation/all', 'ReserveController@apiReservationAll');
 });
 
 Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {

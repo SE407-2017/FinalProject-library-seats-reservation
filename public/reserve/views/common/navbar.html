@@ -1,0 +1,20 @@
+<header class="app-header navbar" ng-controller="mainControl">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">&#9776;</button>
+    <a class="navbar-brand" ui-sref="app.main">图书馆预约系统</a>
+    <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="d-md-down-none" ng-bind="user_info.real_name"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header text-center">
+                    <strong>账户</strong>
+                </div>
+                <a class="dropdown-item" href="/auth/logout"><i class="fa fa-lock"></i> 注销</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
+        </li>
+    </ul>
+</header>

@@ -16,6 +16,8 @@ use App\Http\Controllers\Controller;
 use App\Reservations;
 use App\Floors;
 use App\Tables;
+use App\Jaccount;
+use Carbon\Carbon;
 
 use Response;
 use Session;
@@ -73,7 +75,7 @@ class ReserveController extends Controller
         if ($date == null) {
             return $all_failed_resv->get();
         } else {
-            return $all_failed_resv->whereDate('created_at', $date)->get();
+            return $all_failed_resv->whereDate('created_at', '=', $date)->get();
         }
     }
 
@@ -103,19 +105,65 @@ class ReserveController extends Controller
         }
     }
 
-    public function showDetail()
+    public function getReservationStatus($reservation)
     {
-        $all_reservations = Reservations::where('jaccount',Session::get('jaccount'))->orderBy('arrive_at','desc')->get() ;
-        $user_info = array(
-            'true_name' => Session::get('true_name'),
-            'student_id' => Session::get('student_id'),
-            'jaccount' => Session::get('jaccount'),
-        );
-        return view('reserve/detail',compact('user_info','all_reservations'));
+        if ($reservation->is_arrived == 1) {
+            if ($reservation->is_left == 1) {
+                $status = [0, "已完成"];
+            } else {
+                $status = [2, "进行中"];
+            }
+        } else {
+            if ($reservation->is_left == 1) {
+                $status = [3, "已失效"];
+            } else {
+                $status = [1, "等待前往"];
+            }
+        }
+        return $status;
     }
 
+    public function apiReservationAll()
+    {
+        $all_reservations = Reservations::where('jaccount', Session::get('jaccount'))->orderBy('created_at','desc')->get();
+        foreach ($all_reservations as $reservation) {
+            $reservation->floor;
+            $reservation->status = $this->getReservationStatus($reservation);
+        }
+        return Response::json(array(
+            "success" => true,
+            "count" => $all_reservations->count(),
+            "data" => $all_reservations,
+        ));
+    }
 
+    public function getReservationInProgress()
+    {
+        $in_progress_reservation = Reservations::where('jaccount', Session::get('jaccount'))->where('is_arrived', 0)->where('is_left', 0)->get() ;
+        return array(
+            "count" => $in_progress_reservation->count(),
+            "data" => $in_progress_reservation->first(),
+        );
+    }
 
+    public function apiUserInfo()
+    {
+        $user_info = Jaccount::where('account_name', Session::get('jaccount'))->first();
+        $failed_reservation = $this->getUserFailedReservation(Carbon::now()->toDateString());
+        $in_progress_reservation = $this->getReservationInProgress();
+        return Response::json(array(
+            "success" => true,
+            "user_info" => $user_info,
+            "reservation" => array(
+                "failed" => array(
+                    "count" => $failed_reservation->count(),
+                    "data" => $failed_reservation,
+                ),
+                "in_progress" => $in_progress_reservation,
+                "all_count" => Reservations::where('jaccount', Session::get('jaccount'))->count(),
+            ),
+        ));
+    }
 
     public function logout()
     {
