@@ -58,6 +58,35 @@ class WechatController extends Controller
         return $result == $signature;
     }
 
+    private function CheckMessage($message)
+    {
+        if ($message->MsgType == 'event') {
+            if (WechatMsg::where('MsgType', '=', 'event')->where('FromUserName', '=', $message->FromUserName)->where('CreateTime', '=', $message->CreateTime)->count() != 0)
+                return 'duplicate';
+
+            if ($message->Event == 'subscribe')
+                return 'subscribe';
+
+            return 'unsubscribe';
+        }
+        else {
+            if (WechatMsg::where('MsgId', '=', $message->MsgId)->count() != 0)
+                return 'duplicate';
+
+            if ($message->MsgType != 'text')
+                return 'other';
+
+            $allowed_msgs = json_decode($this->config->allowed_msgs, true);
+            if (!in_array(strtolower($message->Content), $allowed_msgs))
+                return 'other';
+
+            if (TicketRank::where('FromUserName', '=', $message->FromUserName)->count() != 0)
+                return 'repeat';
+
+            return 'valid';
+        }
+    }
+
     public function apiLeaveSeat(Request $request) {
         $success = true;
         $err_msg = "";
@@ -86,9 +115,32 @@ class WechatController extends Controller
 
     }
 
+    private function Reply($old_message, $reply_content)
+    {
+        $wechat_reply = [
+            'ToUserName'   => $old_message->FromUserName,
+            'FromUserName' => $old_message->ToUserName,
+            'CreateTime'   => time(),
+            'MsgType'      => 'text',
+            'Content'      => $reply_content
+        ];
+
+        return view('wechat/reply', $wechat_reply);
+    }
+
     public function MsgHandler()
     {
-        return 0;
+        if (!$this->CheckSignature())
+            return 'Invalid Request';
+
+        $raw_message = file_get_contents('php://input');
+        $message = simplexml_load_string($raw_message, 'SimpleXMLElement', LIBXML_NOCDATA);
+        $message->Content = trim($message->Content);
+
+        $check_result = $this->CheckMessage($message);
+        if ($check_result == 'valid') {
+            $this->Reply($message, $message->Content);
+        }
     }
 
     public function FirstVerify()
