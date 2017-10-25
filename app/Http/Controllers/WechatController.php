@@ -20,6 +20,7 @@ use App\Wechat;
 
 use Response;
 use Session;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Helper\Table;
 
@@ -33,6 +34,28 @@ class WechatController extends Controller
     public function index()
     {
 
+    }
+
+    private function GenerateVerifyCode()
+    {
+        $letters = explode(',', $this->config->verifycode_letters);
+        $length = intval($this->config->verifycode_length);
+        $result = '';
+        for ($i = 0; $i < $length; ++$i)
+            $result .= $letters[array_rand($letters)];
+        return $result;
+    }
+
+    private function CheckSignature()
+    {
+        $signature = Input::get('signature');
+        $timestamp = Input::get('timestamp');
+        $nonce = Input::get('nonce');
+        $token = env('WECHAT_TOKEN', 'no token found');
+        $tmp_arr = array($token, $timestamp, $nonce);
+        sort($tmp_arr, SORT_STRING);
+        $result = sha1(implode($tmp_arr));
+        return $result == $signature;
     }
 
     public function apiLeaveSeat(Request $request) {
@@ -61,6 +84,20 @@ class WechatController extends Controller
             "msg" => $err_msg,
         ));
 
+    }
+
+    public function MsgHandler()
+    {
+        return 0;
+    }
+
+    public function FirstVerify()
+    {
+        if (!$this->CheckSignature())
+            return 'Invalid Request';
+
+        $echostr = Input::get('echostr');
+        return $echostr;
     }
 
     public function logout()
