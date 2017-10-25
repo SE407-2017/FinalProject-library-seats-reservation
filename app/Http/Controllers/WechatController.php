@@ -108,8 +108,15 @@ class WechatController extends Controller
             'MsgType'      => 'text',
             'Content'      => $reply_content
         ];
-
-        return view('wechat/reply', $wechat_reply);
+        //return view('wechat/reply', $wechat_reply);
+        echo "<xml>
+            <ToUserName><![CDATA[{$old_message->FromUserName}]]></ToUserName>
+            <FromUserName><![CDATA[{$old_message->ToUserName}]]></FromUserName>
+            <CreateTime>".time()."</CreateTime>
+            <MsgType><![CDATA[text]]></MsgType>
+            <Content><![CDATA[{$reply_content}]]></Content>
+        </xml>
+        ";
     }
 
     public function MsgHandler()
