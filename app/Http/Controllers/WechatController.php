@@ -61,28 +61,12 @@ class WechatController extends Controller
     private function CheckMessage($message)
     {
         if ($message->MsgType == 'event') {
-            if (WechatMsg::where('MsgType', '=', 'event')->where('FromUserName', '=', $message->FromUserName)->where('CreateTime', '=', $message->CreateTime)->count() != 0)
-                return 'duplicate';
-
             if ($message->Event == 'subscribe')
                 return 'subscribe';
 
             return 'unsubscribe';
         }
         else {
-            if (WechatMsg::where('MsgId', '=', $message->MsgId)->count() != 0)
-                return 'duplicate';
-
-            if ($message->MsgType != 'text')
-                return 'other';
-
-            $allowed_msgs = json_decode($this->config->allowed_msgs, true);
-            if (!in_array(strtolower($message->Content), $allowed_msgs))
-                return 'other';
-
-            if (TicketRank::where('FromUserName', '=', $message->FromUserName)->count() != 0)
-                return 'repeat';
-
             return 'valid';
         }
     }
