@@ -162,12 +162,12 @@ class WechatController extends Controller
                 $wechat = $record->first();
                 $wechat->jaccount = Session::get('jaccount');
                 $wechat->save();
-                //return view('wechat/success')->with(array(
-                //
-                //));
-                echo "Success.";
+                return view('wechat/success')->with(array(
+                    "JaccountID" => Session::get('jaccount'),
+                    "JaccountUserName" => Session::get('true_name'),
+                ));
             } else {
-                app('App\Http\Controllers\Auth\JaccountController')->login('/wechat/bind');
+                app('App\Http\Controllers\Auth\JaccountController')->wechat_login();
             }
         }
     }
