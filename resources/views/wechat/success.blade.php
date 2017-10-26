@@ -34,8 +34,13 @@
             font-size: 96px;
         }
 
-        .info {
+        .id {
             font-size: 40px;
+        }
+
+        .name {
+            font-size: 36px;
+            font-family: 华文中宋, 微软雅黑;
         }
 
     </style>
@@ -45,8 +50,8 @@
     <div class="content">
         <div class="title">Success.<br/></div>
 
-        <div class="info">{{ $JaccountID }}</div>
-        <div class="info">{{ $JaccountUserName }}</div>
+        <div class="id">{{ $JaccountID }}</div>
+        <div class="name">{{ $JaccountUserName }}</div>
     </div>
 </div>
 </body>
