@@ -35,7 +35,7 @@
         }
 
         .info {
-            font-size: 80px;
+            font-size: 40px;
         }
 
     </style>
@@ -43,7 +43,8 @@
 <body>
 <div class="container">
     <div class="content">
-        <div class="title">Success.</div>
+        <div class="title">Success.<br/></div>
+
         <div class="info">{{ $JaccountID }}</div>
         <div class="info">{{ $JaccountUserName }}</div>
     </div>
