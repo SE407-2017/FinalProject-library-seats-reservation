@@ -167,7 +167,7 @@ class WechatController extends Controller
                     "JaccountUserName" => Session::get('true_name'),
                 ));
             } else {
-                app('App\Http\Controllers\Auth\JaccountController')->wechat_login();
+                app('App\Http\Controllers\Auth\JaccountController')->wechat_login($request->token);
             }
         }
     }

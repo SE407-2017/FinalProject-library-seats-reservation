@@ -50,5 +50,5 @@ Route::group(['prefix' => 'wechat'], function() {
     Route::post('/', 'WechatController@MsgHandler');
     Route::get('/', 'WechatController@FirstVerify');
     Route::get('/bind/{token}', 'WechatController@wechatBind');
-    Route::get('/auth/login', 'Auth\JaccountController@wechat_login');
+    Route::get('/auth/login/{token}', 'Auth\JaccountController@wechat_login');
 });
