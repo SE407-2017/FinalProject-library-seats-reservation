@@ -19,7 +19,7 @@ use App\Schedule;
 
 class JaccountController extends Controller
 {
-    public function login()
+    public function login($redirect = "/reserve/home")
     {
         $jatkt = Input::get('jatkt');
         $ht = JaHelper::jalogin($jatkt, '/auth/login');
@@ -60,7 +60,7 @@ class JaccountController extends Controller
 
         Auth::attempt($credentials);
 
-        return redirect('/reserve/home');
+        return redirect($redirect);
     }
 
     public function logout(Request $request)

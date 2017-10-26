@@ -13,7 +13,7 @@ class Wechat extends Model
      * @var array
      */
     protected $fillable = [
-        'wxid', 'jaccount',
+        'wxid', 'jaccount', 'token',
     ];
 
     public function jaccount_info() {
