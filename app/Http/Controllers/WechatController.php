@@ -155,7 +155,7 @@ class WechatController extends Controller
     public function wechatBind(Request $request)
     {
         $record = Wechat::where("token", $request->token)->get();
-        if ($request->count() == 0) {
+        if ($record->count() == 0) {
             die('Invalid token');
         } else {
             if (Session::get('jaccount') != "") {
