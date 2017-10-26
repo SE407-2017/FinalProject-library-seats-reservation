@@ -15,7 +15,7 @@ class CreateWechatUsersTable extends Migration
         Schema::create('wechat_users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('wxid')->unique();
-            $table->string('jaccount')->unique();
+            $table->string('jaccount');
             $table->string('token')->unique();
             $table->timestamps();
         });
