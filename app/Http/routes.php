@@ -32,12 +32,16 @@ Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
     Route::get('/info', 'ReserveController@apiUserInfo');
     Route::post('/reservation/add', 'ReserveController@apiReservationAdd');
     Route::get('/reservation/all', 'ReserveController@apiReservationAll');
+    Route::get('/tables/status/{floor_id}', 'ReserveController@apiFloorTableStatus');
 });
 
-Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {
+Route::group(['prefix' => 'api', 'middleware' => ['auth']], function() {
     Route::get('/floors/get', 'AdminController@apiFloorsGet');
     Route::get('/tables/get', 'AdminController@apiTablesGet');
     Route::get('/tables/get/{floor_id}', 'AdminController@apiTablesGetByFloor');
+});
+
+Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {
     Route::get('/tables/remove/{table_id}', 'AdminController@apiTablesRemove');
     Route::post('/tables/add', 'AdminController@apiTablesAdd');
 });

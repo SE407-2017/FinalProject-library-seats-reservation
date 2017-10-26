@@ -165,6 +165,18 @@ class ReserveController extends Controller
         ));
     }
 
+    public function apiFloorTableStatus(Request $request)
+    {
+        $tables = Tables::where("floor_id", $request->floor_id)->get();
+        foreach ($tables as $table) {
+            $table->seats_count -= Reservations::where('is_left', 0)->where('table_id', $table->id)->count();
+        }
+        return Response::json(array(
+            "success" => true,
+            "tables" => $tables,
+        ));
+    }
+
     public function logout()
     {
         Auth::logout();

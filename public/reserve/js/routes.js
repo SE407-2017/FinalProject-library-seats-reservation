@@ -134,4 +134,20 @@ angular
       }
   })
 
+  .state('app.reservation_add', {
+      url: '/reservation/add',
+      templateUrl: 'views/reservation_add.html',
+      ncyBreadcrumb: {
+          label: '预约座位'
+      },
+      resolve: {
+          loadMyCtrl: ['$ocLazyLoad', function($ocLazyLoad) {
+              // you can lazy load controllers
+              return $ocLazyLoad.load({
+                  files: ['js/controllers/reservation_add.js', 'js/controllers/main.js', 'js/DataTables/datatables.min.js']
+              });
+          }]
+      }
+  })
+
 }]);
