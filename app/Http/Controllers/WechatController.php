@@ -152,6 +152,26 @@ class WechatController extends Controller
         }
     }
 
+    public function wechatBind(Request $request)
+    {
+        $record = Wechat::where("token", $request->token)->get();
+        if ($request->count() == 0) {
+            die('Invalid token');
+        } else {
+            if (Session::get('jaccount') != "") {
+                $wechat = $record->first();
+                $wechat->jaccount = Session::get('jaccount');
+                $wechat->save();
+                //return view('wechat/success')->with(array(
+                //
+                //));
+                echo "Success.";
+            } else {
+                app('App\Http\Controllers\Auth\JaccountController')->login('/wechat/bind');
+            }
+        }
+    }
+
     public function MsgHandler()
     {
         if (!$this->CheckSignature())
