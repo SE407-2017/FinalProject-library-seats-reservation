@@ -44,10 +44,10 @@ Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function
 
 Route::group(['prefix' => 'api/wechat'], function() {
     Route::post('/leave', 'WechatController@apiLeaveSeat');
-    Route::get('/bind', 'WechatController@apiWechatBind');
 });
 
 Route::group(['prefix' => 'wechat'], function() {
     Route::post('/', 'WechatController@MsgHandler');
     Route::get('/', 'WechatController@FirstVerify');
+    Route::get('/bind/{token}', 'WechatController@apiWechatBind');
 });

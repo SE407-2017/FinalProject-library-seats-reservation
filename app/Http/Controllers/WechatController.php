@@ -119,6 +119,39 @@ class WechatController extends Controller
         ";
     }
 
+    public function getBindURL($wxid)
+    {
+        $record = Wechat::where("wxid", $wxid)->get();
+        if ($record->count() == 0) {
+            $token = str_random(8);
+            $wechat = new Wechat(array(
+                'wxid' => $wxid,
+                'token' => $token,
+                'jaccount' => '',
+            ));
+            $wechat->save();
+            return array(
+                'url' => url('/wechat/bind/' . $token),
+                'msg' => '进入以下链接完成JAccount绑定: '
+            );
+        } elseif ($record->first()->jaccount == "") {
+            return array(
+                'url' => url('/wechat/bind/' . $record->first()->token),
+                'msg' => '进入以下链接完成JAccount绑定: '
+            );
+        } elseif ($record->first()->jaccount != "") {
+            return array(
+                'url' => url('/wechat/bind/' . $record->first()->token),
+                'msg' => "您目前已绑定JAccount账号: {$record->first()->jaccount}。要更换绑定账号，进入以下链接完成JAccount绑定: "
+            );
+        } else {
+            return array(
+                'url' => '',
+                'msg' => '未知错误'
+            );
+        }
+    }
+
     public function MsgHandler()
     {
         if (!$this->CheckSignature())
@@ -130,7 +163,13 @@ class WechatController extends Controller
 
         $check_result = $this->CheckMessage($message);
         if ($check_result == 'valid') {
-            $this->Reply($message, $message->Content);
+            if ($message->Content == "绑定") {
+                $msg = $this->getBindURL($message->FromUserName);
+                $this->Reply($message, $msg['msg'] . $msg['url']);
+            } else {
+                //$this->Reply($message, $message->Content);
+                $this->Reply($message, "Shinko最可爱w");
+            }
         }
     }
 
