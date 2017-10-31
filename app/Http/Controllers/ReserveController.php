@@ -43,8 +43,23 @@ class ReserveController extends Controller
         );
     }
 
+    public function refreshReservationStatus()
+    {
+        $reservations = Reservations::where('is_left', 0)->get();
+        $dt = Carbon::now();
+        foreach ($reservations as $reservation) {
+            $diff_minutes = Carbon::createFromTimestamp(strtotime($reservation->arrive_at))->diffInMinutes($dt);
+            echo $diff_minutes;
+            if ($diff_minutes >= 15) {
+                $reservation->is_left = 1;
+                $reservation->save();
+            }
+        }
+    }
+
     public function checkReservation($request)
     {
+        $this->refreshReservationStatus();
         $is_valid = true;
         $err_msg = "";
         if (!Floors::where('id', $request->floor_id)) {
@@ -62,6 +77,12 @@ class ReserveController extends Controller
         } elseif ($this->getUserFailedReservation(Carbon::now()->toDateString())->count() >= 3) {
             $is_valid = false;
             $err_msg = "今日预约失败次数已达上限";
+        } elseif (Reservations::where('jaccount', Session::get('jaccount'))->where('is_left', 0)->count() != 0) {
+            $is_valid = false;
+            $err_msg = "存在尚未完成预约";
+        } elseif (Reservations::where('table_id', $request->table_id)->where('seat_id', $request->seat_id)->where('is_left', 0)->count() != 0) {
+            $is_valid = false;
+            $err_msg = "当前座位已被预约";
         }
         return array(
             "success" => $is_valid,

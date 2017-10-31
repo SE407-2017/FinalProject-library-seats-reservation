@@ -1,0 +1,7 @@
+<div class="animated fadeIn" ng-controller="reservationAddDetailControl">
+    <div class="row" style="margin-bottom: 20px;">
+        <select class="custom-select" ng-change="floor_change()" ng-model="selected_floor">
+            <option ng-repeat="floor in floors" value="{{ floor.id }}">{{ floor.floor_name }}</option>
+        </select>
+    </div>
+</div>
