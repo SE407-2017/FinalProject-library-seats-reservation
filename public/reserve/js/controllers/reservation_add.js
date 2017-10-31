@@ -11,12 +11,16 @@ function reservationAddControl($scope, $http) {
                 $scope.tables = response.data.tables;
             });
     };
+    $scope.reserve = function(table_id) {
+        console.log(table_id);
+    };
     $scope.floor_change = function() {
-        $scope.refresh_tables($scope.selected_floor);
+        $scope.refresh_tables($scope.selected_floor.id);
     };
     $http.get("/api/floors/get")
         .then(function(response) {
             $scope.floors = response.data.data;
+            $scope.selected_floor = $scope.floors[0];
             $scope.refresh_tables($scope.floors[0].id)
         });
 }

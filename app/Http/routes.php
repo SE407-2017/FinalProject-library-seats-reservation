@@ -39,6 +39,7 @@ Route::group(['prefix' => 'api', 'middleware' => ['auth']], function() {
     Route::get('/floors/get', 'AdminController@apiFloorsGet');
     Route::get('/tables/get', 'AdminController@apiTablesGet');
     Route::get('/tables/get/{floor_id}', 'AdminController@apiTablesGetByFloor');
+    Route::get('/table/{table_id}/detail', 'ReserveController@apiTableDetail');
 });
 
 Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {
