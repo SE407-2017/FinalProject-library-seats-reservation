@@ -32,6 +32,7 @@ Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
     Route::get('/info', 'ReserveController@apiUserInfo');
     Route::post('/reservation/add', 'ReserveController@apiReservationAdd');
     Route::get('/reservation/all', 'ReserveController@apiReservationAll');
+    Route::get('/reservation/remove/{reservation_id}', 'ReserveController@apiReservationRemove');
     Route::get('/tables/status/{floor_id}', 'ReserveController@apiFloorTableStatus');
 });
 
