@@ -158,6 +158,34 @@ class ReserveController extends Controller
         return $status;
     }
 
+    public function apiReservationRemove(Request $request)
+    {
+        $success = true;
+        $err_msg = "";
+        $rid = $request->reservation_id;
+        $reservation = Reservations::where('id', $rid)->first();
+        if ($reservation->count() == 0) {
+            $success = false;
+            $err_msg = "找不到该预约";
+        } elseif ($reservation->jaccount != Session::get('jaccount')) {
+            $success = false;
+            $err_msg = "该预约非当前用户所有";
+        } elseif ($reservation->is_left == 1) {
+            $success = false;
+            $err_msg = "该预约已结束";
+        } elseif ($reservation->is_arrived == 1) {
+            $success = false;
+            $err_msg = "该预约正在进行";
+        } else {
+            $reservation->is_left = 1;
+            $reservation->save();
+        }
+        return Response::json(array(
+            'success' => $success,
+            'msg' => $err_msg,
+        ));
+    }
+
     public function apiReservationAll()
     {
         $all_reservations = Reservations::where('jaccount', Session::get('jaccount'))->orderBy('created_at','desc')->get();
