@@ -93,12 +93,14 @@ class ReserveController extends Controller
 	public function apiTableDetail(Request $request)
     {
         $table = Tables::where('id', $request->table_id)->first();
-        $table->avail_seats = array();
-        for ($i = 0; i < $table->seats_count; $i++) {
+        $table->floor;
+        $avail_seats = array();
+        for ($i = 0; $i < $table->seats_count; $i++) {
             if (Reservations::where('table_id', $request->table_id)->where('seat_id', $i)->where('is_left', 0)->count() == 0) {
-                $table->avail_seats[] = $i;
+                $avail_seats[] = $i;
             }
         }
+        $table->avail_seats = $avail_seats;
         return $table;
     }
 

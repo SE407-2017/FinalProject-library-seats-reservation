@@ -1,7 +1,5 @@
 <div class="animated fadeIn" ng-controller="reservationAddDetailControl">
-    <div class="row" style="margin-bottom: 20px;">
-        <select class="custom-select" ng-change="floor_change()" ng-model="selected_floor">
-            <option ng-repeat="floor in floors" value="{{ floor.id }}">{{ floor.floor_name }}</option>
-        </select>
+    <div style="margin-bottom: 20px;">
+        <span style="font-size: 2em; font-weight: 200;" ng-bind="table.id"></span>桌 (<span ng-bind="table.floor.floor_name"></span>, <span ng-bind="table.has_socket ? '有' : '无'"></span>插座)
     </div>
 </div>
