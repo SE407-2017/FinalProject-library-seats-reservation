@@ -43,14 +43,7 @@ class ReserveController extends Controller
         );
     }
 
-Route::delete('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
-Route::get('/reservation/cancel/{id}', function () {
-    return redirect()->guest('/forbidden');
-});
 
-
-
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     /**
      * 检查是否有超时的预约
