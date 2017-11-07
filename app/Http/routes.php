@@ -20,7 +20,7 @@ Route::get('/auth/login', 'Auth\JaccountController@login');
 Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
 Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
-    Route::get('/home', 'ReserveController@index');
+    Route::get('/home', 'ReserveController@index');  
     Route::get('/detail', 'ReserveController@showDetail');
 });
 

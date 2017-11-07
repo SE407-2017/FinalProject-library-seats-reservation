@@ -16,6 +16,8 @@ use App\Http\Controllers\Controller;
 use App\Reservations;
 use App\Floors;
 use App\Tables;
+use Carbon\Carbon;
+
 
 use Response;
 use Session;
@@ -39,6 +41,81 @@ class ReserveController extends Controller
             'user_info' => $user,
             )
         );
+    }
+
+Route::delete('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
+Route::get('/reservation/cancel/{id}', function () {
+    return redirect()->guest('/forbidden');
+});
+
+
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+    /**
+     * 检查是否有超时的预约
+     * **注意**！ 当提供true为参数时，将遍历整张表，并依次检查是否超时
+     *
+     * @param bool $all_user
+     * @return array true when $all_user is false, false otherwise.
+     *              always true when $all_user is true
+     */
+    public function checkLastReservationFailedOrNot($all_user = false)
+    {
+        if (!$all_user) {
+            $current_user = Session::get('jaccount');
+            $last_reservation = Reservations::where('jaccount', $current_user)->orderBy('created_at','desc')->first();
+            if ($last_reservation != NULL) {
+                $reservation_time = strtotime($last_reservation->arrive_at);
+                $current_time = time();
+                if ($current_time - $reservation_time > 900) {
+                    return [$last_reservation, true];
+                }
+            }
+            return [$last_reservation, false];
+        } else {
+            $reservations = Reservations::where('is_arrived', 0)->where('is_left', 0)->get();
+            if($reservations != NULL) {
+                foreach ($reservations as $reservation) {
+                    $reservation_time = strtotime($reservation->arrive_at);
+                    $current_time = time();
+                    if ($current_time - $reservation_time > 900) {
+                        $reservation->is_arrived = 0;
+                        $reservation->is_left = 1;
+                        $reservation->save();
+                    }
+                }
+            }
+            return NULL;
+        }
+    }
+
+
+    /**
+     * Set the specified column as "failed".
+     *
+     * @return Response
+     */
+    public function apiReservationCancel()
+    {
+        $check_result = $this->checkLastReservationFailedOrNot();
+        $expired_or_not = $check_result[1];
+        $this_reservation = $check_result[0];
+
+        if ($this_reservation == NULL) {
+            //说明没有需要取消的预约
+        } else {
+            $this_reservation->is_arrived = 0;
+            $this_reservation->is_left = 1;
+            $this_reservation->save();
+            $num = $this->getUserFailedReservation(Carbon::now()->toDateString())->count(); // 预约取消次数
+            if ($expired_or_not) {
+                //说明最近一次预约已经失效
+            } else {
+                //预约取消成功
+            }
+        }
+        return redirect('/reserve/detail');
     }
 
     public function checkReservation($request)
@@ -73,7 +150,7 @@ class ReserveController extends Controller
         if ($date == null) {
             return $all_failed_resv->get();
         } else {
-            return $all_failed_resv->whereDate('created_at', $date)->get();
+            return $all_failed_resv->whereDate('created_at','=' ,$date)->get();
         }
     }
 
@@ -111,6 +188,7 @@ class ReserveController extends Controller
             'student_id' => Session::get('student_id'),
             'jaccount' => Session::get('jaccount'),
         );
+        echo $this->getUserFailedReservation(Carbon::now()->toDateString())->count();
         return view('reserve/detail',compact('user_info','all_reservations'));
     }
 
