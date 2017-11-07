@@ -12,7 +12,7 @@ function reservationAddControl($scope, $http) {
             });
     };
     $scope.reserve = function(table_id) {
-        console.log(table_id);
+        window.location.href = "#!/reservation/add/" + table_id;
     };
     $scope.floor_change = function() {
         $scope.refresh_tables($scope.selected_floor.id);
