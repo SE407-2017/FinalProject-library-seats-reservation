@@ -208,6 +208,22 @@ class WechatController extends Controller
         return redirect('/');
     }
 
+    public function getReservationInfoUsingWechatID(Request $request)
+    {
+        $wxid = $request->wxid;
+        $jaccount = Wechat::where("wxid",$wxid)->first()->jaccount;
+        $all_reservations = Reservations::where('jaccount', $jaccount)->orderBy('created_at','desc')->get();
+        foreach ($all_reservations as $reservation) {
+            $reservation->floor;
+            $reservation->status = $this->getReservationStatus($reservation);
+        }
+        return Response::json(array(
+            "success" => true,
+            "count" => $all_reservations->count(),
+            "data" => $all_reservations,
+        ));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
