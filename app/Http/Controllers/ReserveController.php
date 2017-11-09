@@ -107,6 +107,7 @@ class ReserveController extends Controller
             }
         }
         return redirect('/reserve/detail');
+    }
 
     public function refreshReservationStatus()
     {
