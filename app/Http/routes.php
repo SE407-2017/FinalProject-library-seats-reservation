@@ -34,6 +34,7 @@ Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
     Route::get('/reservation/all', 'ReserveController@apiReservationAll');
     Route::get('/reservation/remove/{reservation_id}', 'ReserveController@apiReservationRemove');
     Route::get('/tables/status/{floor_id}', 'ReserveController@apiFloorTableStatus');
+    Route::get('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
 });
 
 Route::group(['prefix' => 'api', 'middleware' => ['auth']], function() {
