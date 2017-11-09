@@ -17,11 +17,11 @@
 
 Route::get('/', 'Auth\JaccountController@login');
 Route::get('/auth/login', 'Auth\JaccountController@login');
+Route::get('/auth/logout', 'Auth\JaccountController@logout');
 Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
 Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
-    Route::get('/home', 'ReserveController@index');  
-    Route::get('/detail', 'ReserveController@showDetail');
+    Route::get('/home', 'ReserveController@index');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
@@ -29,13 +29,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
 });
 
 Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
+    Route::get('/info', 'ReserveController@apiUserInfo');
     Route::post('/reservation/add', 'ReserveController@apiReservationAdd');
+    Route::get('/reservation/all', 'ReserveController@apiReservationAll');
+    Route::get('/reservation/remove/{reservation_id}', 'ReserveController@apiReservationRemove');
+    Route::get('/tables/status/{floor_id}', 'ReserveController@apiFloorTableStatus');
+    Route::get('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
 });
 
-Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {
+Route::group(['prefix' => 'api', 'middleware' => ['auth']], function() {
     Route::get('/floors/get', 'AdminController@apiFloorsGet');
     Route::get('/tables/get', 'AdminController@apiTablesGet');
     Route::get('/tables/get/{floor_id}', 'AdminController@apiTablesGetByFloor');
+    Route::get('/table/{table_id}/detail', 'ReserveController@apiTableDetail');
+});
+
+Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function() {
     Route::get('/tables/remove/{table_id}', 'AdminController@apiTablesRemove');
     Route::post('/tables/add', 'AdminController@apiTablesAdd');
 });
@@ -44,7 +53,9 @@ Route::group(['prefix' => 'api/wechat'], function() {
     Route::post('/leave', 'WechatController@apiLeaveSeat');
 });
 
-Route::delete('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
-Route::get('/reservation/cancel/{id}', function () {
-    return redirect()->guest('/forbidden');
+Route::group(['prefix' => 'wechat'], function() {
+    Route::post('/', 'WechatController@MsgHandler');
+    Route::get('/', 'WechatController@FirstVerify');
+    Route::get('/bind/{token}', 'WechatController@wechatBind');
+    Route::get('/auth/login/{token}', 'Auth\JaccountController@wechat_login');
 });

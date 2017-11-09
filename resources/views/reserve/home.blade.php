@@ -1,19 +1,81 @@
-{{--Created by PhpStorm.--}}
-{{--User: hebin--}}
-{{--Date: 2017-09-30--}}
-{{--Time: 15:58--}}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>个人中心</title>
-</head>
-<body>
-<h2>你好，{{ $user_info['true_name'] }}。</h2>
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
 
-@if(App\Reservations::where('jaccount', $user_info['jaccount'])->first() != NULL)
-    <a href="{{  url('/reserve/detail') }}">查看预约详情</a>
-@endif
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="SJTU Library reservation dashboard">
+    <meta name="author" content="Boar">
+    <meta name="keyword" content="SJTU">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>图书馆预约</title>
+
+    <!-- Main styles for this application -->
+    <link href="{{ url('reserve/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url('reserve/css/toastr.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <!-- Bootstrap and necessary plugins -->
+    <script src="{{ url('reserve/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url('reserve/bower_components/tether/dist/js/tether.min.js') }}"></script>
+    <script src="{{ url('reserve/js/popper.min.js') }}"></script>
+    <script src="{{ url('reserve/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+</head>
+
+<!-- BODY options, add following classes to body to change options
+
+	// Header options
+	1. '.header-fixed'					- Fixed Header
+
+	// Sidebar options
+	1. '.sidebar-fixed'					- Fixed Sidebar
+	2. '.sidebar-hidden'				- Hidden Sidebar
+	3. '.sidebar-off-canvas'		- Off Canvas Sidebar
+  4. '.sidebar-minimized'			- Minimized Sidebar (Only icons)
+  5. '.sidebar-compact'			  - Compact Sidebar
+
+	// Aside options
+	1. '.aside-menu-fixed'			- Fixed Aside Menu
+	2. '.aside-menu-hidden'			- Hidden Aside Menu
+	3. '.aside-menu-off-canvas'	- Off Canvas Aside Menu
+
+  // Breadcrumb options
+  1. '.breadcrumb-fixed'			- Fixed Breadcrumb
+
+	// Footer options
+	1. 'footer-fixed'						- Fixed footer
+
+	-->
+
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+
+<!-- User Interface -->
+<ui-view></ui-view>
+
+<!-- AngularJS -->
+<script src="{{ url('reserve/bower_components/angular/angular.min.js') }}"></script>
+
+<!-- AngularJS plugins -->
+<script src="{{ url('reserve/bower_components/angular-ui-router/release/angular-ui-router.min.js') }}"></script>
+<script src="{{ url('reserve/bower_components/oclazyload/dist/ocLazyLoad.min.js') }}"></script>
+<script src="{{ url('reserve/bower_components/angular-breadcrumb/dist/angular-breadcrumb.min.js') }}"></script>
+<script src="{{ url('reserve/bower_components/angular-loading-bar/build/loading-bar.min.js') }}"></script>
+
+<!-- AngularJS CoreUI App scripts -->
+
+<script src="{{ url('reserve/js/app.js') }}"></script>
+
+<script src="{{ url('reserve/js/routes.js') }}"></script>
+
+<script src="{{ url('reserve/js/controllers.js') }}"></script>
+<script src="{{ url('reserve/js/directives.js') }}"></script>
+<script src="{{ url('reserve/js/toastr.min.js') }}"></script>
+
 </body>
+
 </html>
 

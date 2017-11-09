@@ -1,0 +1,27 @@
+<div class="animated fadeIn" ng-controller="reservationAddControl">
+    <div class="row" style="margin-bottom: 20px;">
+        <select class="custom-select" ng-change="floor_change()" ng-model="selected_floor" ng-options="floor.floor_name for floor in floors">
+            <!-- <option ng-repeat="floor in floors" value="{{ floor.id }}">{{ floor.floor_name }}</option> -->
+        </select>
+    </div>
+    <div class="row">
+        <table id="all_table" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <td style="font-weight: 600">桌号</td>
+                <td style="font-weight: 600">空余座位</td>
+                <td style="font-weight: 600">有无插座</td>
+                <td style="font-weight: 600">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="table in tables">
+                <td ng-bind="table.id"></td>
+                <td ng-bind="table.seats_count"></td>
+                <td ng-bind="table.has_socket ? '有' : '无'"></td>
+                <td><button type="button" class="btn btn-light" ng-click="table.seats_count ? reserve(table.id) : 0" ng-disabled="!table.seats_count" ng-bind="table.seats_count ? '预约' : '已满'"></button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

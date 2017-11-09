@@ -1,0 +1,30 @@
+<div class="animated fadeIn" ng-controller="reservationAddDetailControl">
+    <div style="margin-bottom: 20px;">
+        <span style="font-size: 2em; font-weight: 200;" ng-bind="table.id"></span> 桌 （<span ng-bind="table.floor.floor_name"></span>，<span ng-bind="table.has_socket ? '有' : '无'"></span>插座）
+    </div>
+    <div>
+        <table id="all_table" class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <td style="font-weight: 600">座位号</td>
+                <td style="font-weight: 600">预约</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="seat in table.avail_seats">
+                <td ng-bind="seat"></td>
+                <td><input type="radio" ng-model="seats.selected" value="{{ seat }}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="input-group col col-sm-6 col-md-4 col-lg-4" style="margin-bottom: 20px;">
+            <span class="input-group-addon" id="basic-addon1">预约时间</span>
+            <span class="input-group-addon" id="basic-addon1"><i class="fa fa-calendar" aria-hidden="true"></i></span>
+            <input class="input-append date form_datetime form-control" id="reserve_time" size="16" type="text" readonly >
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-light" ng-click="_log()">log</button>
+</div>

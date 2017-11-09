@@ -16,8 +16,8 @@ use App\Http\Controllers\Controller;
 use App\Reservations;
 use App\Floors;
 use App\Tables;
+use App\Jaccount;
 use Carbon\Carbon;
-
 
 use Response;
 use Session;
@@ -42,8 +42,6 @@ class ReserveController extends Controller
             )
         );
     }
-
-
 
     /**
      * 检查是否有超时的预约
@@ -109,10 +107,24 @@ class ReserveController extends Controller
             }
         }
         return redirect('/reserve/detail');
+
+    public function refreshReservationStatus()
+    {
+        $reservations = Reservations::where('is_left', 0)->get();
+        $dt = Carbon::now();
+        foreach ($reservations as $reservation) {
+            $diff_minutes = Carbon::createFromTimestamp(strtotime($reservation->arrive_at))->diffInMinutes($dt);
+            echo $diff_minutes;
+            if ($diff_minutes >= 15) {
+                $reservation->is_left = 1;
+                $reservation->save();
+            }
+        }
     }
 
     public function checkReservation($request)
     {
+        $this->refreshReservationStatus();
         $is_valid = true;
         $err_msg = "";
         if (!Floors::where('id', $request->floor_id)) {
@@ -130,11 +142,31 @@ class ReserveController extends Controller
         } elseif ($this->getUserFailedReservation(Carbon::now()->toDateString())->count() >= 3) {
             $is_valid = false;
             $err_msg = "今日预约失败次数已达上限";
+        } elseif (Reservations::where('jaccount', Session::get('jaccount'))->where('is_left', 0)->count() != 0) {
+            $is_valid = false;
+            $err_msg = "存在尚未完成预约";
+        } elseif (Reservations::where('table_id', $request->table_id)->where('seat_id', $request->seat_id)->where('is_left', 0)->count() != 0) {
+            $is_valid = false;
+            $err_msg = "当前座位已被预约";
         }
         return array(
             "success" => $is_valid,
             "msg" => $err_msg,
         );
+    }
+	
+	public function apiTableDetail(Request $request)
+    {
+        $table = Tables::where('id', $request->table_id)->first();
+        $table->floor;
+        $avail_seats = array();
+        for ($i = 0; $i < $table->seats_count; $i++) {
+            if (Reservations::where('table_id', $request->table_id)->where('seat_id', $i)->where('is_left', 0)->count() == 0) {
+                $avail_seats[] = $i;
+            }
+        }
+        $table->avail_seats = $avail_seats;
+        return $table;
     }
 
     public function getUserFailedReservation($date = null)
@@ -143,7 +175,7 @@ class ReserveController extends Controller
         if ($date == null) {
             return $all_failed_resv->get();
         } else {
-            return $all_failed_resv->whereDate('created_at','=' ,$date)->get();
+            return $all_failed_resv->whereDate('created_at', '=', $date)->get();
         }
     }
 
@@ -173,20 +205,105 @@ class ReserveController extends Controller
         }
     }
 
-    public function showDetail()
+    public function getReservationStatus($reservation)
     {
-        $all_reservations = Reservations::where('jaccount',Session::get('jaccount'))->orderBy('arrive_at','desc')->get() ;
-        $user_info = array(
-            'true_name' => Session::get('true_name'),
-            'student_id' => Session::get('student_id'),
-            'jaccount' => Session::get('jaccount'),
-        );
-        echo $this->getUserFailedReservation(Carbon::now()->toDateString())->count();
-        return view('reserve/detail',compact('user_info','all_reservations'));
+        if ($reservation->is_arrived == 1) {
+            if ($reservation->is_left == 1) {
+                $status = [0, "已完成"];
+            } else {
+                $status = [2, "进行中"];
+            }
+        } else {
+            if ($reservation->is_left == 1) {
+                $status = [3, "已失效"];
+            } else {
+                $status = [1, "等待前往"];
+            }
+        }
+        return $status;
     }
 
+    public function apiReservationRemove(Request $request)
+    {
+        $success = true;
+        $err_msg = "";
+        $rid = $request->reservation_id;
+        $reservation = Reservations::where('id', $rid)->first();
+        if ($reservation->count() == 0) {
+            $success = false;
+            $err_msg = "找不到该预约";
+        } elseif ($reservation->jaccount != Session::get('jaccount')) {
+            $success = false;
+            $err_msg = "该预约非当前用户所有";
+        } elseif ($reservation->is_left == 1) {
+            $success = false;
+            $err_msg = "该预约已结束";
+        } elseif ($reservation->is_arrived == 1) {
+            $success = false;
+            $err_msg = "该预约正在进行";
+        } else {
+            $reservation->is_left = 1;
+            $reservation->save();
+        }
+        return Response::json(array(
+            'success' => $success,
+            'msg' => $err_msg,
+        ));
+    }
 
+    public function apiReservationAll()
+    {
+        $all_reservations = Reservations::where('jaccount', Session::get('jaccount'))->orderBy('created_at','desc')->get();
+        foreach ($all_reservations as $reservation) {
+            $reservation->floor;
+            $reservation->status = $this->getReservationStatus($reservation);
+        }
+        return Response::json(array(
+            "success" => true,
+            "count" => $all_reservations->count(),
+            "data" => $all_reservations,
+        ));
+    }
 
+    public function getReservationInProgress()
+    {
+        $in_progress_reservation = Reservations::where('jaccount', Session::get('jaccount'))->where('is_arrived', 0)->where('is_left', 0)->get() ;
+        return array(
+            "count" => $in_progress_reservation->count(),
+            "data" => $in_progress_reservation->first(),
+        );
+    }
+
+    public function apiUserInfo()
+    {
+        $user_info = Jaccount::where('account_name', Session::get('jaccount'))->first();
+        $failed_reservation = $this->getUserFailedReservation(Carbon::now()->toDateString());
+        $in_progress_reservation = $this->getReservationInProgress();
+        return Response::json(array(
+            "success" => true,
+            "user_info" => $user_info,
+            "reservation" => array(
+                "failed" => array(
+                    "count" => $failed_reservation->count(),
+                    "data" => $failed_reservation,
+                ),
+                "in_progress" => $in_progress_reservation,
+                "all_count" => Reservations::where('jaccount', Session::get('jaccount'))->count(),
+            ),
+        ));
+    }
+
+    public function apiFloorTableStatus(Request $request)
+    {
+        $tables = Tables::where("floor_id", $request->floor_id)->get();
+        foreach ($tables as $table) {
+            $table->seats_count -= Reservations::where('is_left', 0)->where('table_id', $table->id)->count();
+        }
+        return Response::json(array(
+            "success" => true,
+            "tables" => $tables,
+        ));
+    }
 
     public function logout()
     {
