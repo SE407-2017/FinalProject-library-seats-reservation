@@ -1,12 +1,11 @@
 <div class="animated fadeIn" ng-controller="mainControl">
     <div class="row" style="font-size: 1.3em; font-weight: 200; font-family: 华文中宋, 微软雅黑">
 
-        欢迎来到图书馆预约系统,<span style="font-weight: 400; margin-left: 0.5em" ng-bind="user_info.real_name">(<span style="font-weight: 400; margin-left: 0.5em" ng-bind="user_info.account_name"></span>)</span>同学！
-        <br />
-
+        欢迎来到图书馆预约系统，<span style="font-weight: 400" ng-bind="user_info.real_name"></span>&nbsp;(<span style="font-weight: 400" ng-bind="user_info.account_name"></span>) 同学！
+        <br /><br />
     </div>
     <div style="font-size: 1.1em; font-weight: 300; font-family: 微软雅黑">
-        您今日已有 <span style="font-weight: 200; font-size: 1.6em" ng-bind="reservation.failed.count"></span> 条失败预约，有 <span style="font-weight: 200; font-size: 1.6em" ng-bind="reservation.in_progress.count"></span> 条预约尚未成行。
+        您今日已有 <span style="font-weight: 200; font-size: 1.6em" ng-bind="reservation.failed.count"></span> 条失败预约，并有 <span style="font-weight: 200; font-size: 1.6em" ng-bind="reservation.in_progress.count"></span> 条预约尚未成行。
     </div>
     <hr>
     <div class="row" style="margin-bottom: 20px">
