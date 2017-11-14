@@ -44,7 +44,7 @@ function reservationAllControl($scope, $http) {
                                 last:       "最后页"
                             },
                         },
-                        "ordering": true
+                        "ordering": false
                     });
                 },0);
             });
