@@ -89,26 +89,35 @@ class ReserveController extends Controller
      *
      * @return Response
      */
-    public function apiReservationCancel()
+    public function apiReservationCancel(Request $request)
     {
-        $check_result = $this->checkLastReservationFailedOrNot();
-        $expired_or_not = $check_result[1];
-        $this_reservation = $check_result[0];
-
-        if ($this_reservation == NULL) {
-            //说明没有需要取消的预约
+        $reservation = Reservations::where("id", $request->id)->get();
+        if ($reservation->count() == 0) {
+            return Response::json(array(
+                "success" => false,
+                "msg" => "预约不存在"
+            ));
         } else {
-            $this_reservation->is_arrived = 0;
-            $this_reservation->is_left = 1;
-            $this_reservation->save();
-            $num = $this->getUserFailedReservation(Carbon::now()->toDateString())->count(); // 预约取消次数
-            if ($expired_or_not) {
-                //说明最近一次预约已经失效
+            if ($reservation->first()->is_arrived == true) {
+                return Response::json(array(
+                    "success" => false,
+                    "msg" => "预约行程已开始"
+                ));
+            } elseif ($reservation->first()->is_left == true) {
+                return Response::json(array(
+                    "success" => false,
+                    "msg" => "预约已失效"
+                ));
             } else {
-                //预约取消成功
+                $r = $reservation->first();
+                $r->is_left = true;
+                $r->save();
+                return Response::json(array(
+                    "success" => true,
+                    "msg" => "取消成功"
+                ));
             }
         }
-        return redirect('/reserve/detail');
     }
 
     public function refreshReservationStatus()
