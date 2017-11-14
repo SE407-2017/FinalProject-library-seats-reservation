@@ -18,6 +18,8 @@ use App\Floors;
 use App\Tables;
 use App\Jaccount;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Input;
+use stdClass;
 
 use Response;
 use Session;
@@ -180,10 +182,22 @@ class ReserveController extends Controller
         }
     }
 
+    function array2Object($array) {
+        if (is_array($array)) {
+            $obj = new StdClass();
+            foreach ($array as $key => $val){
+                $obj->$key = $val;
+            }
+        }
+        else { $obj = $array; }
+        return $obj;
+    }
+
     public function apiReservationAdd(Request $request)
     {
+        $request = $this->array2Object(Input::all());
         $check = $this->checkReservation($request);
-        if ($check->success == true) {
+        if ($check["success"] == true) {
             $reservation = new Reservations(array(
                 'name' => Session::get('true_name'),
                 'jaccount' => Session::get('jaccount'),

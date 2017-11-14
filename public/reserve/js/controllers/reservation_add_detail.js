@@ -8,6 +8,17 @@ function reservationAddDetailControl($scope, $http, $stateParams) {
     $scope.table_id = $stateParams.table_id;
     $scope.seats = {};
     $scope.seats.selected = "-1";
+    $scope.doReserve = function() {
+        var data = {
+            floor_id: $scope.table.floor.id,
+            table_id: $scope.table.id,
+            seat_id: $scope.seats.selected,
+            arrive_at: $('#reserve_time').val()
+        };
+        $http.post("/api/user/reservation/add", data).success(function(response) {
+            console.log(response)
+        });
+    };
     var myDate = new Date();
     myDate.setHours(22);
     myDate.setMinutes(30);
