@@ -2,6 +2,11 @@
 angular
     .module('app')
     .controller('reservationAllControl', reservationAllControl)
+    .filter('to_trusted', ['$sce', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    }]);
 
 reservationAllControl.$inject = ['$scope', '$http'];
 function reservationAllControl($scope, $http) {
@@ -11,21 +16,15 @@ function reservationAllControl($scope, $http) {
             "color" : $scope.status_color[id]
         };
     };
-    $scope.cancel_reservation = function(id) {
-        $http.get("/api/user/reservation/cancel/" + id).then(function(response) {
-            if (response.data.success == false) {
-                toastr.error(response.data.msg, '错误')
-            } else {
-                toastr.error(response.data.msg, '成功');
-                $scope.render_page();
-            }
-        });
+    $scope.generate_button = function(id) {
+        return "<button type='button' class='btn btn-danger' onclick='cancel_reservation("+id+")'>取消预约</button>";
     };
     $scope.render_page = function() {
         $http.get("/api/user/reservation/all")
             .then(function(response) {
                 $scope.count = response.data.count;
                 $scope.reservation_all = response.data.data;
+                console.log($scope.reservation_all);
                 setTimeout(function(){
                     $scope.DataTable = $("#all_table").DataTable({
                         "searching": true,
@@ -51,4 +50,14 @@ function reservationAllControl($scope, $http) {
             });
     }
     $scope.render_page();
+}
+
+function cancel_reservation(id) {
+    $.get("/api/user/reservation/cancel/"+id, function(result){
+        if (result.success == false) {
+            toastr.error(result.msg, '错误')
+        } else {
+            window.location.reload();
+        }
+    });
 }

@@ -240,7 +240,7 @@ class ReserveController extends Controller
             if ($reservation->is_left == 1) {
                 $status = [3, "已失效"];
             } else {
-                $status = [1, "等待前往"];
+                $status = [1, "等待前往..."];
             }
         }
         return $status;

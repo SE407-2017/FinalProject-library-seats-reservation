@@ -23,7 +23,7 @@
                 <td ng-bind="reservation.seat_id"></td>
                 <td ng-bind="reservation.arrive_at"></td>
                 <td ng-bind="reservation.created_at"></td>
-                <td ng-bind="reservation.status[1]" ng-style="generate_color(reservation.status[0])"></td>
+                <td ng-bind-html="(reservation.status[1] + (reservation.status[1]=='等待前往...' ? generate_button(reservation.id) : '')) | to_trusted" ng-style="generate_color(reservation.status[0])"></td>
             </tr>
             </tbody>
         </table>

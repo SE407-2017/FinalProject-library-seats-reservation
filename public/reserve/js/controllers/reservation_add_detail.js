@@ -19,7 +19,7 @@ function reservationAddDetailControl($scope, $http, $stateParams) {
             if (response.data.success == false) {
                 toastr.error(response.data.msg, '错误')
             } else {
-                windows.location.href = "#!/reservation/all"
+                window.location.href = "/reserve/home#!/reservation/all"
             }
         });
     };
