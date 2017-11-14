@@ -15,8 +15,12 @@ function reservationAddDetailControl($scope, $http, $stateParams) {
             seat_id: $scope.seats.selected,
             arrive_at: $('#reserve_time').val()
         };
-        $http.post("/api/user/reservation/add", data).success(function(response) {
-            console.log(response)
+        $http.post("/api/user/reservation/add", data).then(function(response) {
+            if (response.data.success == false) {
+                toastr.error(response.data.msg, '错误')
+            } else {
+                windows.location.href = "#!/reservation/all"
+            }
         });
     };
     var myDate = new Date();

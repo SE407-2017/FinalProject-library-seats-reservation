@@ -117,7 +117,6 @@ class ReserveController extends Controller
         $dt = Carbon::now();
         foreach ($reservations as $reservation) {
             $diff_minutes = Carbon::createFromTimestamp(strtotime($reservation->arrive_at))->diffInMinutes($dt);
-            echo $diff_minutes;
             if ($diff_minutes >= 15) {
                 $reservation->is_left = 1;
                 $reservation->save();
@@ -215,7 +214,7 @@ class ReserveController extends Controller
         } else {
             return Response::json(array(
                 "success" => false,
-                "msg" => $check->msg,
+                "msg" => $check["msg"],
             ));
         }
     }
