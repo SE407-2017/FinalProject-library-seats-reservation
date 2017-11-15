@@ -276,6 +276,7 @@ class ReserveController extends Controller
 
     public function apiReservationAll()
     {
+        $this->refreshReservationStatus();
         $all_reservations = Reservations::where('jaccount', Session::get('jaccount'))->orderBy('created_at','desc')->get();
         foreach ($all_reservations as $reservation) {
             $reservation->floor;
