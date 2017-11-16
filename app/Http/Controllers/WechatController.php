@@ -99,6 +99,14 @@ class WechatController extends Controller
 
     }
 
+    public function apiGetOpenid(Request $request) {
+        $appid = env("WECHAT_APPID");
+        $appsecret = env("WECHAT_APPSECRET");
+        $userinfo = file_get_contents("https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$appsecret}&js_code={$request->code}&grant_type=authorization_code");
+        $userinfo = json_decode($userinfo);
+        return Response::json($userinfo);
+    }
+
     private function Reply($old_message, $reply_content)
     {
         $wechat_reply = [
