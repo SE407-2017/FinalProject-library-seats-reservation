@@ -23,6 +23,7 @@ use Session;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Helper\Table;
+include_once "wxBizDataCrypt.php";
 
 const BY_MSG = 0;
 const BY_WECHAT_APP = 1;
@@ -206,6 +207,25 @@ class WechatController extends Controller
             } else {
                 app('App\Http\Controllers\Auth\JaccountController')->wechat_login($request->token);
             }
+        }
+    }
+
+    public function apiDecryptData(Request $request)
+    {
+        $data = "";
+        $pc = new WXBizDataCrypt(env("WECHAT_APPID"), $request->sessionKey);
+        $errCode = $pc->decryptData($request->encryptedData, $request->iv, $data );
+
+        if ($errCode == 0) {
+            return Response::json(array(
+                "success" => true,
+                "data" => $data,
+            ));
+        } else {
+            return Response::json(array(
+                "success" => false,
+                "errcode" => $errCode,
+            ));
         }
     }
 
