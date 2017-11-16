@@ -51,7 +51,7 @@ Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function
 
 Route::group(['prefix' => 'api/wechat'], function() {
     Route::post('/leave', 'WechatController@apiLeaveSeat');
-    Route::post('/getOpenid', 'WechatController@apiGetOpenid');
+    Route::all('/getOpenid', 'WechatController@apiGetOpenid');
 });
 
 Route::group(['prefix' => 'wechat'], function() {
