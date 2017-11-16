@@ -64,7 +64,7 @@ class JaccountController extends Controller
     }
 
 
-    public function wechat_login($token = "")
+    public function wechat_login($token = "", $type)
     {
         $jatkt = Input::get('jatkt');
         $ht = JaHelper::jalogin($jatkt, "/wechat/auth/login/" . $token);
@@ -105,7 +105,12 @@ class JaccountController extends Controller
 
         Auth::attempt($credentials);
 
-        return redirect("/wechat/bind/" . $token);
+        if ($type == 0) {
+            return redirect("/wechat/bind/" . $token);
+        } else {
+            return redirect("/wechat/bind/openid/" . $token);
+        }
+
     }
 
 

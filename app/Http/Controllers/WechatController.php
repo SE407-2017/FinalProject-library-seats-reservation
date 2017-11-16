@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Helper\Table;
 
+const BY_MSG = 0;
+const BY_WECHAT_APP = 1;
+
 class WechatController extends Controller
 {
     /**
@@ -125,6 +128,32 @@ class WechatController extends Controller
             <Content><![CDATA[{$reply_content}]]></Content>
         </xml>
         ";
+    }
+
+    public function wechatBindByOpenid(Request $request)
+    {
+        $openid = $request->openid;
+        $record = Wechat::where('wxid', $openid);
+        $wechat = null;
+        if ($record->count() == 0) {
+            $wechat = new Wechat(array(
+                "wxid" => $openid,
+                "jaccount" => "",
+                "token" => "BIND_BY_WECHAT_APP",
+            ));
+        } else {
+            $wechat = $record->first();
+        }
+        if (Session::get('jaccount') != "") {
+            $wechat->jaccount = Session::get('jaccount');
+            $wechat->save();
+            return view('wechat/success')->with(array(
+                "JaccountID" => Session::get('jaccount'),
+                "JaccountUserName" => Session::get('true_name'),
+            ));
+        } else {
+            app('App\Http\Controllers\Auth\JaccountController')->wechat_login($openid, BY_WECHAT_APP);
+        }
     }
 
     public function getBindURL($wxid)
