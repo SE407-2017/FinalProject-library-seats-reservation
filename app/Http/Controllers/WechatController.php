@@ -23,7 +23,7 @@ use Session;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Helper\Table;
-include_once "wxBizDataCrypt.php";
+use App\WXBizDataCrypt;
 
 const BY_MSG = 0;
 const BY_WECHAT_APP = 1;

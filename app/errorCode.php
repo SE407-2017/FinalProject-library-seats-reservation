@@ -1,4 +1,5 @@
-﻿﻿<?php
+<?php
+namespace App;
 
 /**
  * error code 说明.
