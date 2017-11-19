@@ -17,6 +17,7 @@
 
 Route::get('/', 'Auth\JaccountController@login');
 Route::get('/auth/login', 'Auth\JaccountController@login');
+Route::get('/auth/wechat/login/{seat_id}', 'Auth\JaccountController@qr_login');
 Route::get('/auth/logout', 'Auth\JaccountController@logout');
 Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
@@ -67,6 +68,7 @@ Route::group(['prefix' => 'wechat'], function() {
     Route::get('/auth/login/{token}/{method}', 'Auth\JaccountController@wechat_login');
 });
 
-Route::group(['prefix' => 'wechat', 'middleware' => ['auth']], function() {
+Route::group(['prefix' => 'wechat', 'middleware' => ['auth.wechat']], function() {
     Route::get('/inSeat/{seat_id}', 'WechatController@wechatInSeat');
+    Route::get('/leaveSeat', 'WechatController@wechatLeaveSeat');
 });

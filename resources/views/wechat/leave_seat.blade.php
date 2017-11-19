@@ -7,7 +7,7 @@
     <meta name="keywords" content="">
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
-    <title>Success</title>
+    <title>Leave</title>
 
     <!-- Set render engine for 360 browser -->
     <meta name="renderer" content="webkit">
@@ -144,10 +144,9 @@
 <div class="get">
     <div class="am-g">
         <div class="am-u-lg-12">
-            <h1 class="get-title">入座成功！</h1>
+            <h1 class="get-title">{{ $title }}</h1>
 
-            <p>{{ $data->floor_id }}楼 - {{ $data->table_id }}桌{{ $data->seat_id }}座</p>
-            <p><a class="am-btn am-btn-default" href="{{ url('wechat/leaveSeat') }}">离开</a></p>
+            <p>{{ $msg }}</p>
         </div>
     </div>
 </div>

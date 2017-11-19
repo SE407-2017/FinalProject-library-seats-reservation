@@ -20,7 +20,8 @@
 </body>
 <script>
     function generate() {
-        var data = {floor: $("#qrcode").val(), table: $("#table").val(), seat: $("#seat").val()};
+        var data = {floor: Number($("#floor").val()), table: Number($("#table").val()), seat: Number($("#seat").val())};
+        $('#qrcode').val();
         $('#qrcode').qrcode('{{ url("/wechat/inSeat") }}/' + BASE64.encoder(JSON.stringify(data)));
     }
 

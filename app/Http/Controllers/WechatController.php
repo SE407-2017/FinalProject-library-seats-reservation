@@ -24,9 +24,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Helper\Table;
 use App\WXBizDataCrypt;
+use Carbon\Carbon;
 
-const BY_MSG = 0;
-const BY_WECHAT_APP = 1;
 
 class WechatController extends Controller
 {
@@ -349,6 +348,20 @@ class WechatController extends Controller
                     return view("wechat/fail", array("msg" => "该座位不是您预约的座位", "hitokoto" => $hitokoto));
                 }
             }
+        }
+    }
+
+    public function wechatLeaveSeat()
+    {
+        $hitokoto = $this->getHitokoto();
+        $reservation = Reservations::where("jaccount", Session::get("jaccount"))->where("is_arrived", 1)->where("is_left", 0)->get();
+        if ($reservation->count() == 0) {
+            return view("wechat/leave_seat", array("title" => "离座失败", "msg" => "您当前没有进行中预约", "hitokoto" => $hitokoto));
+        } else {
+            $resv = $reservation->first();
+            $resv->is_left = true;
+            $resv->save();
+            return view("wechat/leave_seat", array("title" => "离座成功！", "msg" => "期待下一次为您服务", "hitokoto" => $hitokoto));
         }
     }
 
