@@ -24,6 +24,10 @@ Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
     Route::get('/home', 'ReserveController@index');
 });
 
+Route::group(['prefix' => 'test'], function() {
+    Route::get('/qr', 'TestController@generateQRCode');
+});
+
 Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
     Route::get('/home', 'AdminController@index');
 });
@@ -61,4 +65,8 @@ Route::group(['prefix' => 'wechat'], function() {
     Route::get('/bind/{token}', 'WechatController@wechatBind');
     Route::get('/bind/openid/{openid}', 'WechatController@wechatBindByOpenid');
     Route::get('/auth/login/{token}/{method}', 'Auth\JaccountController@wechat_login');
+});
+
+Route::group(['prefix' => 'wechat', 'middleware' => ['auth']], function() {
+    Route::get('/inSeat/{seat_id}', 'WechatController@wechatInSeat');
 });

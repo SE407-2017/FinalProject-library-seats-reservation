@@ -217,10 +217,7 @@ class WechatController extends Controller
         $errCode = $pc->decryptData($request->encryptedData, $request->iv, $data );
 
         if ($errCode == 0) {
-            return Response::json(array(
-                "success" => true,
-                "data" => $data,
-            ));
+            echo $data;
         } else {
             return Response::json(array(
                 "success" => false,
@@ -279,6 +276,80 @@ class WechatController extends Controller
             "count" => $all_reservations->count(),
             "data" => $all_reservations,
         ));
+    }
+
+    public function ifSeatFree($floor, $table, $seat)
+    {
+        $reservation = Reservations::where("jaccount", Session::get("jaccount"))->where("floor_id", $floor)->where("seat_id", $seat)->where("table_id", $table)->where("is_left", 0);
+        if ($reservation->count() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkResvValid($reservation, $floor, $table, $seat)
+    {
+        if ($reservation->floor_id == $floor && $reservation->table_id == $table && $reservation->seat_id == $seat) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getHitokoto()
+    {
+        $hitokoto = json_decode(file_get_contents("https://sslapi.hitokoto.cn/?c=d"));
+        return $hitokoto;
+    }
+
+    public function wechatInSeat(Request $request)
+    {
+        $seat_json = json_decode(base64_decode($request->seat_id));
+        $floor = $seat_json->floor;
+        $table = $seat_json->table;
+        $seat = $seat_json->seat;
+
+        $hitokoto = $this->getHitokoto();
+
+        $reservation = Reservations::where("jaccount", Session::get("jaccount"))->where("is_arrived", 1)->where("is_left", 0)->get();
+        if ($reservation->count() != 0) {
+            $resv = $reservation->first();
+            if ($this->checkResvValid($resv, $floor, $table, $seat)) {
+                return view("wechat/in_seat", array("data" => $resv, "hitokoto" => $hitokoto));
+            } else {
+                return view("wechat/fail", array("msg" => "该座位不是您预约的座位", "hitokoto" => $hitokoto));
+            }
+        } else {
+            $reservation = Reservations::where("jaccount", Session::get("jaccount"))->where("is_arrived", 0)->where("is_left", 0)->get();
+            if ($reservation->count() == 0) {
+                if ($this->ifSeatFree($floor, $table, $seat)) {
+                    $new_resv = new Reservations(array(
+                        "name" => Session::get("true_name"),
+                        "jaccount" => Session::get("jaccount"),
+                        "floor_id" => $floor,
+                        "table_id" => $table,
+                        "seat_id" => $seat,
+                        "arrive_at" => Carbon::now(),
+                        "is_arrived" => true,
+                        "is_left" => false,
+                    ));
+                    $new_resv->save();
+                    return view("wechat/in_seat", array("data" => $new_resv, "hitokoto" => $hitokoto));
+                } else {
+                    return view("wechat/fail", array("msg" => "该座位已被占用", "hitokoto" => $hitokoto));
+                }
+            } else {
+                if ($this->checkResvValid($reservation->first(), $floor, $table, $seat)) {
+                    $current_resv = $reservation->first();
+                    $current_resv->is_arrived = true;
+                    $current_resv->save();
+                    return view("wechat/in_seat", array("data" => $current_resv, "hitokoto" => $hitokoto));
+                } else {
+                    return view("wechat/fail", array("msg" => "该座位不是您预约的座位", "hitokoto" => $hitokoto));
+                }
+            }
+        }
     }
 
     /**
