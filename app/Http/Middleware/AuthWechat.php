@@ -15,7 +15,7 @@ class AuthWechat
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->is_admin != 1) {
+        if (!Auth::check()) {
             if ($request->ajax()) {
                 return response('Unauthorized.', 403);
             } else {
