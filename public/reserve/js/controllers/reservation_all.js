@@ -17,7 +17,7 @@ function reservationAllControl($scope, $http) {
         };
     };
     $scope.generate_button = function(id) {
-        return "<button type='button' class='btn btn-danger' onclick='cancel_reservation("+id+")'>取消预约</button>";
+        return "<button type='button' class='btn btn-link' style='margin-top: -4px;' onclick='cancel_reservation("+id+")'>取消预约</button>";
     };
     $scope.render_page = function() {
         $http.get("/api/user/reservation/all")
