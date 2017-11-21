@@ -6,16 +6,22 @@
     <script src="{{ url('/reserve/js/base64.js') }}"></script>
 </head>
 <body>
-    <div>
-        楼层: <input id="floor" />
-    </div>
-    <div>
-        桌号: <input id="table" />
-    </div>
-    <div>
-        座位: <input id="seat" />
-    </div>
-    <div><button onclick="generate()">生成</button></div>
+	<div class="input-group" style="font-family: 华文中宋, 微软雅黑; font-size: large; width: 240px; padding-left: 20px;">
+		<span class="input-group-addon" id="sizing-addon1">楼层号</span>
+		<input id="floor" type="text" class="form-control" placeholder="Floor" aria-describedby="sizing-addon1">
+	</div>
+	<br>
+	<div class="input-group" style="font-family: 华文中宋, 微软雅黑; font-size: large; width: 240px; padding-left: 20px;">
+		<span class="input-group-addon" id="sizing-addon1">桌子号</span>
+		<input id="table" type="text" class="form-control" placeholder="Table" aria-describedby="sizing-addon2">
+	</div>
+	<br>
+	<div class="input-group" style="font-family: 华文中宋, 微软雅黑; font-size: large; width: 240px; padding-left: 20px;">
+		<span class="input-group-addon" id="sizing-addon1">座位号</span>
+		<input id="seat" type="text" class="form-control" placeholder="Seat" aria-describedby="sizing-addon3">
+	</div>
+	<br>
+    <div style="font-family: 华文中宋, 微软雅黑; font-size: large; padding-left: 100px;"><button onclick="generate()">生成</button></div>
     <div id="qrcode"></div>
 </body>
 <script>
