@@ -176,7 +176,11 @@ class JAccountManager
                 }else {
                     $this->hasTicketInURL = false;
                     $scheme = $this->getCurrentScheme();
-                    $rurl = $scheme. '://'. $_SERVER["HTTP_HOST"];
+                    if (isset($_SERVER["HTTP_HOST"])) {
+                        $rurl = $scheme. '://'. $_SERVER["HTTP_HOST"];
+                    } else {
+                        $rurl = $scheme. '://localhost:8081/';
+                    }
                     $rurl = $rurl . $returnURL;
                     $JAcc_redirectURL= $this->uaBaseURL . "jalogin?sid=" . $this->siteID . "&returl=" . $this->encrypt($rurl). "&se=" .$this->encrypt(session_id());
                     $this->redirectURL($JAcc_redirectURL) ;
@@ -319,7 +323,6 @@ class JAccountManager
 class JaHelper {
     public static function jalogin($ticket,$url){
 
-         session_start();
          function converthex2bin($hexstr){
              return pack('H*',$hexstr);
          }
@@ -345,7 +348,6 @@ class JaHelper {
 
     public static function jalogout($returnURL){
 
-         session_start();
          function converthex2bin($hexstr){
              return pack('H*',$hexstr);
          }

@@ -29,10 +29,6 @@ Route::group(['prefix' => 'test'], function() {
     Route::get('/qr', 'TestController@generateQRCode');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
-    Route::get('/home', 'AdminController@index');
-});
-
 Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
     Route::get('/info', 'ReserveController@apiUserInfo');
     Route::post('/reservation/add', 'ReserveController@apiReservationAdd');
