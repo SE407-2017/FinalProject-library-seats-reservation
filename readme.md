@@ -20,7 +20,25 @@
     ![](https://user-images.githubusercontent.com/7235968/33252313-690e77f4-d378-11e7-8d38-17c3c50d51fb.png)
     
     3. 选择座椅号，选择预计到达时间，提交预约
-    ![image](https://user-images.githubusercontent.com/7235968/33252360-ad7b1aa0-d378-11e7-844d-62a045bb811e.png)
+    ![](https://user-images.githubusercontent.com/7235968/33252360-ad7b1aa0-d378-11e7-844d-62a045bb811e.png)
 
-    4. 如果您当前可以预约该座位，您将会被跳转至“预约管理”页面。否则，您将被提示您为何在此时进行预约。
-    
+    4. 如果您当前可以预约该座位，您将会被跳转至“所有预约”页面。否则，您将被提示您为何在此时无法进行预约。
+    ![](https://user-images.githubusercontent.com/7235968/33252880-b04cc7d0-d37b-11e7-8b42-2d315e0c81b8.png)
+    ![](https://user-images.githubusercontent.com/7235968/33252901-ceae822c-d37b-11e7-8a13-e4046740fa86.png)
+
+    5. 如果您有预约无法成行，可以在“所有预约”页面取消该预约。每天可以取消的预约**不超过3次**。
+
+* **到馆签到：**
+    （为演示方便，可以在[测试页面](https://library.shinko.love/test/qr/)生成座位二维码。
+    1. 如图，生成二维码
+    ![](https://user-images.githubusercontent.com/7235968/33253006-5dee7852-d37c-11e7-903c-f54a39a3970e.png)
+
+    2. 使用手机微信扫描二维码，进入入座签到程序
+    ![](https://user-images.githubusercontent.com/7235968/33253077-c2b59c3e-d37c-11e7-86ef-b7fefacf5562.png)
+
+    3. 若要离开座位，点击“离开”即可
+    ![](https://user-images.githubusercontent.com/7235968/33253126-ea012b64-d37c-11e7-9894-31f81847a005.png)
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
