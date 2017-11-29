@@ -30,8 +30,8 @@ function reservationAllControl($scope, $http) {
                         "searching": true,
                         language: {
                             processing:     "处理中",
-                            search:         "搜索:",
                             lengthMenu:    "每页显示_MENU_条",
+                            search:         "搜索:",
                             info:           "显示 _START_ 到 _END_ 条, 共 _TOTAL_ 条",
                             infoEmpty:      "显示 0 到 0 条, 共 0 条",
                             loadingRecords: "正在加载...",
