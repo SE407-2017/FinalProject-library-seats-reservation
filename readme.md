@@ -39,6 +39,18 @@
     3. 若要离开座位，点击“离开”即可
     ![](https://user-images.githubusercontent.com/7235968/33253126-ea012b64-d37c-11e7-9894-31f81847a005.png)
 
+
+## Thanks to
+* [Laravel](https://laravel.com/)
+    > The PHP Framework For Web Artisans
+
+* [Hitokoto 一言](http://hitokoto.cn)
+    > 动漫也好、小说也好、网络也好，不论在哪里，我们总会看到有那么一两个句子能穿透你的心。
+
+* **马颖华老师及助教苏宇老师**
+
+* "图书馆预约占座系统"团队所有成员
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
