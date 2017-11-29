@@ -147,6 +147,7 @@
             <h1 class="get-title">入座成功！</h1>
 
             <p>{{ $data->floor_id }}楼 - {{ $data->table_id }}桌{{ $data->seat_id }}座</p>
+            <p>{{ $msg }}</p>
             <p><a class="am-btn am-btn-default" href="{{ url('wechat/leaveSeat') }}">离开</a></p>
         </div>
     </div>
