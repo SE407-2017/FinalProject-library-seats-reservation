@@ -345,7 +345,7 @@ class WechatController extends Controller
                     $current_resv->save();
                     return view("wechat/in_seat", array("data" => $current_resv, "hitokoto" => $hitokoto, "msg" => "您已扫码入座，离座时请点击离座按钮"));
                 } else {
-                    return view("wechat/fail", array("msg" => "该座位不是您预约的座位", "hitokoto" => $hitokoto));
+                    return view("wechat/fail", array("msg" => "您已预约其它座位，请仔细核对您的座位号", "hitokoto" => $hitokoto));
                 }
             }
         }
