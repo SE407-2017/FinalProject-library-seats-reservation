@@ -46,5 +46,24 @@ class PagesTest extends TestCase
             ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "3", 'table_id' => 1])
             ->see('false');
 
+        $this->flushSession();
+
+
+        //Test reserve conflict
+        $this->actingAs($user)
+            ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "2", 'table_id' => 1])
+            ->see('false');
+
+        //Test reserve another seat
+        $this->actingAs($user)
+            ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "3", 'table_id' => 1])
+            ->see('false');
+
+    }
+    public function reservationConflict(){
+        $this->withoutMiddleware();
+
+
+
     }
 }
