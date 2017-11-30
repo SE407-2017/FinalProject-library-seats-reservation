@@ -315,7 +315,7 @@ class WechatController extends Controller
         if ($reservation->count() != 0) {
             $resv = $reservation->first();
             if ($this->checkResvValid($resv, $floor, $table, $seat)) {
-                return view("wechat/in_seat", array("data" => $resv, "hitokoto" => $hitokoto));
+                return view("wechat/in_seat", array("data" => $resv, "hitokoto" => $hitokoto,"msg" => ""));
             } else {
                 return view("wechat/fail", array("msg" => "该座位不是您预约的座位", "hitokoto" => $hitokoto));
             }
@@ -334,7 +334,7 @@ class WechatController extends Controller
                         "is_left" => false,
                     ));
                     $new_resv->save();
-                    return view("wechat/in_seat", array("data" => $new_resv, "hitokoto" => $hitokoto));
+                    return view("wechat/in_seat", array("data" => $new_resv, "hitokoto" => $hitokoto,"msg" => ""));
                 } else {
                     return view("wechat/fail", array("msg" => "该座位已被占用", "hitokoto" => $hitokoto));
                 }
