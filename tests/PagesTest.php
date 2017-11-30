@@ -19,17 +19,17 @@ class PagesTest extends TestCase
 
         // Test forbidden page
         $this->visit('/forbidden')
-             ->see('Forbidden');
+            ->see('Forbidden');
 
         $user = factory(App\User::class)->create();
         // Test home page
         $this->actingAs($user)
-             ->visit('/reserve/home')
-             ->see('图书馆预约');
+            ->visit('/reserve/home')
+            ->see('图书馆预约');
 
         // Test QR generate page
         $this->visit('/test/qr')
-             ->see('Floor');
+            ->see('Floor');
 
         // Test reserve a seat
         $this->actingAs($user)
@@ -46,24 +46,18 @@ class PagesTest extends TestCase
             ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "3", 'table_id' => 1])
             ->see('false');
 
-        $this->flushSession();
+        $newUser = factory(App\User::class)->create();
 
 
-        //Test reserve conflict
-        $this->actingAs($user)
+        //Test reservation conflict
+        $this->actingAs($newUser)
             ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "2", 'table_id' => 1])
             ->see('false');
 
-        //Test reserve another seat
-        $this->actingAs($user)
+        //Test reservation another seat
+        $this->actingAs($newUser)
             ->post('/api/user/reservation/add', ['arrive_at' => Carbon::now(), 'floor_id' => 1, 'seat_id' => "3", 'table_id' => 1])
-            ->see('false');
-
-    }
-    public function reservationConflict(){
-        $this->withoutMiddleware();
-
-
+            ->see('true');
 
     }
 }
