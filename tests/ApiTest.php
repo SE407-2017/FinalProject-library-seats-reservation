@@ -18,5 +18,10 @@ class ApiTest extends TestCase
 
         $this->visit('/api/floors/get')
             ->see('true');
+
+        $this->visit('/api/table/1/detail')
+            ->see('avail_seats');
+
+
     }
 }
