@@ -1,4 +1,4 @@
-# Library Reservation
+﻿# Library Reservation
 ## Guide
 ### Development pre-request
 
@@ -87,3 +87,13 @@ In Windows:
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
+
+## 使用说明
+
+    图书馆预约系统前端网址为https://library.shinko.love/
+    用户需拥有jAccount账号，并使用jAccoun统一认证登录本系统。
+    登录系统后，用户可按照页面说明预约座位。
+    预约提交后可取消，但用户每天只有三次机会取消预约，超过三次将不能再次预约。
+    
+
