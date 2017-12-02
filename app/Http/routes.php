@@ -17,6 +17,7 @@
 
 Route::get('/', 'Auth\JaccountController@login');
 Route::get('/auth/login', 'Auth\JaccountController@login');
+Route::get('/auth/wechat/login/{seat_id}', 'Auth\JaccountController@qr_login');
 Route::get('/auth/logout', 'Auth\JaccountController@logout');
 Route::get('/forbidden', 'Auth\JaccountController@forbidden');
 
@@ -24,8 +25,8 @@ Route::group(['prefix' => 'reserve', 'middleware' => ['auth']], function() {
     Route::get('/home', 'ReserveController@index');
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth.admin']], function() {
-    Route::get('/home', 'AdminController@index');
+Route::group(['prefix' => 'test'], function() {
+    Route::get('/qr', 'TestController@generateQRCode');
 });
 
 Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
@@ -34,6 +35,7 @@ Route::group(['prefix' => 'api/user', 'middleware' => ['auth']], function() {
     Route::get('/reservation/all', 'ReserveController@apiReservationAll');
     Route::get('/reservation/remove/{reservation_id}', 'ReserveController@apiReservationRemove');
     Route::get('/tables/status/{floor_id}', 'ReserveController@apiFloorTableStatus');
+    Route::get('/reservation/cancel/{id}', 'ReserveController@apiReservationCancel');
 });
 
 Route::group(['prefix' => 'api', 'middleware' => ['auth']], function() {
@@ -50,11 +52,19 @@ Route::group(['prefix' => 'api/admin', 'middleware' => ['auth.admin']], function
 
 Route::group(['prefix' => 'api/wechat'], function() {
     Route::post('/leave', 'WechatController@apiLeaveSeat');
+    Route::any('/getOpenid', 'WechatController@apiGetOpenid');
+    Route::any('/decryptData', 'WechatController@apiDecryptData');
 });
 
 Route::group(['prefix' => 'wechat'], function() {
     Route::post('/', 'WechatController@MsgHandler');
     Route::get('/', 'WechatController@FirstVerify');
     Route::get('/bind/{token}', 'WechatController@wechatBind');
-    Route::get('/auth/login/{token}', 'Auth\JaccountController@wechat_login');
+    Route::get('/bind/openid/{openid}', 'WechatController@wechatBindByOpenid');
+    Route::get('/auth/login/{token}/{method}', 'Auth\JaccountController@wechat_login');
+});
+
+Route::group(['prefix' => 'wechat', 'middleware' => ['auth.wechat']], function() {
+    Route::get('/inSeat/{seat_id}', 'WechatController@wechatInSeat');
+    Route::get('/leaveSeat', 'WechatController@wechatLeaveSeat');
 });

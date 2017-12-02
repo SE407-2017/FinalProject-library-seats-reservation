@@ -12,8 +12,11 @@
 */
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+    $name = $faker->name;
+    Session::set('true_name', $name);
+    Session::set('jaccount', $name);
     return [
-        'name' => $faker->name,
+        'name' => $name,
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),

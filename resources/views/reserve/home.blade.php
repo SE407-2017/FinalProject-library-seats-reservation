@@ -18,6 +18,12 @@
     <link href="{{ url('reserve/css/toastr.min.css') }}" rel="stylesheet">
     <link href="https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
+    <!-- Bootstrap and necessary plugins -->
+    <script src="{{ url('reserve/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url('reserve/bower_components/tether/dist/js/tether.min.js') }}"></script>
+    <script src="{{ url('reserve/js/popper.min.js') }}"></script>
+    <script src="{{ url('reserve/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
 </head>
 
 <!-- BODY options, add following classes to body to change options
@@ -50,13 +56,6 @@
 <!-- User Interface -->
 <ui-view></ui-view>
 
-<!-- Bootstrap and necessary plugins -->
-<script src="{{ url('reserve/bower_components/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ url('reserve/bower_components/tether/dist/js/tether.min.js') }}"></script>
-<script src="{{ url('reserve/js/popper.min.js') }}"></script>
-<script src="{{ url('reserve/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-<script src="https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
-
 <!-- AngularJS -->
 <script src="{{ url('reserve/bower_components/angular/angular.min.js') }}"></script>
 
@@ -79,3 +78,4 @@
 </body>
 
 </html>
+

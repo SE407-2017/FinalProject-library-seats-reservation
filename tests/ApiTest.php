@@ -3,17 +3,25 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\User;
 
-class ExampleTest extends TestCase
+class ApiTest extends TestCase
 {
     /**
      * A basic functional test example.
      *
      * @return void
      */
-    public function testBasicExample()
+    public function testApis()
     {
-        $this->visit('/')
-             ->see('Laravel 5');
+        $this->withoutMiddleware();
+
+        $this->visit('/api/floors/get')
+            ->see('true');
+
+        $this->visit('/api/table/1/detail')
+            ->see('avail_seats');
+
+
     }
 }

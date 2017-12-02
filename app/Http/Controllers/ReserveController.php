@@ -18,6 +18,8 @@ use App\Floors;
 use App\Tables;
 use App\Jaccount;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Input;
+use stdClass;
 
 use Response;
 use Session;
@@ -43,13 +45,87 @@ class ReserveController extends Controller
         );
     }
 
+    /**
+     * 检查是否有超时的预约
+     * **注意**！ 当提供true为参数时，将遍历整张表，并依次检查是否超时
+     *
+     * @param bool $all_user
+     * @return array true when $all_user is false, false otherwise.
+     *              always true when $all_user is true
+     */
+    public function checkLastReservationFailedOrNot($all_user = false)
+    {
+        if (!$all_user) {
+            $current_user = Session::get('jaccount');
+            $last_reservation = Reservations::where('jaccount', $current_user)->orderBy('created_at','desc')->first();
+            if ($last_reservation != NULL) {
+                $reservation_time = strtotime($last_reservation->arrive_at);
+                $current_time = time();
+                if ($current_time - $reservation_time > 900) {
+                    return [$last_reservation, true];
+                }
+            }
+            return [$last_reservation, false];
+        } else {
+            $reservations = Reservations::where('is_arrived', 0)->where('is_left', 0)->get();
+            if($reservations != NULL) {
+                foreach ($reservations as $reservation) {
+                    $reservation_time = strtotime($reservation->arrive_at);
+                    $current_time = time();
+                    if ($current_time - $reservation_time > 900) {
+                        $reservation->is_arrived = 0;
+                        $reservation->is_left = 1;
+                        $reservation->save();
+                    }
+                }
+            }
+            return NULL;
+        }
+    }
+
+
+    /**
+     * Set the specified column as "failed".
+     *
+     * @return Response
+     */
+    public function apiReservationCancel(Request $request)
+    {
+        $reservation = Reservations::where("id", $request->id)->get();
+        if ($reservation->count() == 0) {
+            return Response::json(array(
+                "success" => false,
+                "msg" => "预约不存在"
+            ));
+        } else {
+            if ($reservation->first()->is_arrived == true) {
+                return Response::json(array(
+                    "success" => false,
+                    "msg" => "预约行程已开始"
+                ));
+            } elseif ($reservation->first()->is_left == true) {
+                return Response::json(array(
+                    "success" => false,
+                    "msg" => "预约已失效"
+                ));
+            } else {
+                $r = $reservation->first();
+                $r->is_left = true;
+                $r->save();
+                return Response::json(array(
+                    "success" => true,
+                    "msg" => "取消成功"
+                ));
+            }
+        }
+    }
+
     public function refreshReservationStatus()
     {
         $reservations = Reservations::where('is_left', 0)->get();
         $dt = Carbon::now();
         foreach ($reservations as $reservation) {
-            $diff_minutes = Carbon::createFromTimestamp(strtotime($reservation->arrive_at))->diffInMinutes($dt);
-            echo $diff_minutes;
+            $diff_minutes = Carbon::createFromTimestamp(strtotime($reservation->arrive_at))->diffInMinutes($dt, false);
             if ($diff_minutes >= 15) {
                 $reservation->is_left = 1;
                 $reservation->save();
@@ -114,10 +190,22 @@ class ReserveController extends Controller
         }
     }
 
+    function array2Object($array) {
+        if (is_array($array)) {
+            $obj = new StdClass();
+            foreach ($array as $key => $val){
+                $obj->$key = $val;
+            }
+        }
+        else { $obj = $array; }
+        return $obj;
+    }
+
     public function apiReservationAdd(Request $request)
     {
+        $request = $this->array2Object(Input::all());
         $check = $this->checkReservation($request);
-        if ($check->success == true) {
+        if ($check["success"] == true) {
             $reservation = new Reservations(array(
                 'name' => Session::get('true_name'),
                 'jaccount' => Session::get('jaccount'),
@@ -135,7 +223,7 @@ class ReserveController extends Controller
         } else {
             return Response::json(array(
                 "success" => false,
-                "msg" => $check->msg,
+                "msg" => $check["msg"],
             ));
         }
     }
@@ -152,7 +240,7 @@ class ReserveController extends Controller
             if ($reservation->is_left == 1) {
                 $status = [3, "已失效"];
             } else {
-                $status = [1, "等待前往"];
+                $status = [1, "等待前往..."];
             }
         }
         return $status;
@@ -188,6 +276,7 @@ class ReserveController extends Controller
 
     public function apiReservationAll()
     {
+        $this->refreshReservationStatus();
         $all_reservations = Reservations::where('jaccount', Session::get('jaccount'))->orderBy('created_at','desc')->get();
         foreach ($all_reservations as $reservation) {
             $reservation->floor;

@@ -1,99 +1,65 @@
-﻿# Library Reservation
-## Guide
-### Development pre-request
+# Library Reservation
+![](https://api.travis-ci.org/SE407-2017/FinalProject-library-seats-reservation.svg?branch=master)
 
-推荐开发环境:
+项目已基本完成。以下为用户手册，项目部署请详见[guide.md](guide.md)。
+## User guide
+体验地址：[https://library.shinko.love/](https://library.shinko.love/)。
 
-In Windows:
-- xampp (https://www.apachefriends.org/xampp-files/5.6.31/xampp-win32-5.6.31-0-VC11-installer.exe)
-- PHPStorm (https://www.jetbrains.com/phpstorm/)
-- 必须: PHP Composer (https://getcomposer.org/) (推荐中国镜像: https://pkg.phpcomposer.com/#how-to-install-composer)
+### 开始使用
+* 打开上述地址，网站将自动跳转到jAccount登录，使用jAccount账号登录后即可访问网站
 
-确保php.exe所在目录已添加到PATH环境变量。
+    <img src="https://user-images.githubusercontent.com/7235968/33252194-99025d32-d377-11e7-8c60-751756ab77c2.png" height="200" />
 
-以上为推荐开发环境, 以下向导以此为基础。使用其他环境亦可, 但必须至少安装1. Apache / Nginx, 2. MySQL, 3. PHP5
+* 此时您可以预约座位或管理您现有的预约。
 
-### Getting start
+    <img src="https://user-images.githubusercontent.com/7235968/33252228-c351b6b4-d377-11e7-9f2f-2fc0a3ce04f6.png" height="200" />
 
-(Windows下建议在Powershell或Git Bash中进行操作)
-
-1. fork这个代码仓库
-
-2. 将代码clone到本地
-    ```
-    git clone https://github.com/你的用户名/FinalProject-library-seats-reservation
-    ```
-
-3. 切换到项目目录
-    ```
-    cd FinalProject-library-seats-reservation
-    ```
-
-4. 安装依赖包
-    ```
-    composer install
-    ```
-
-5. 创建环境配置文件
-    ```
-    mv .env.example .env
-    ```
-6. 打开xampp控制面板, 点击Apache->Config->Apache (httpd.conf), 找到
-    ```
-    Listen 80
-    ```
-    在其下方添加一行:
-    ```
-    Listen 8081
-    ```
-    保存退出, 再点击Apache->Config-> Browse [Apache], 打开conf\extra\httpd-vhosts.conf, 添加如下行:
-    ```
-    <VirtualHost *:8081>
-        ServerAdmin webmaster@localhost
-        DocumentRoot "[项目目录]/public"
-        ServerName localhost
-        ErrorLog "logs/localhost-error.log"
-        CustomLog "logs/localhost-access.log" common
-    </VirtualHost>
-    ```
-    保存退出, 重启Apache。
+* **预约座位：**
+    1. 选择您需要的楼层
     
-    xampp控制面板中点击MySQL->Start, MySQL->Admin, 左侧点击New, Database name填library-reservation, 点击Create.
+        <img src="https://user-images.githubusercontent.com/7235968/33252289-24ccf548-d378-11e7-88f1-87c2ecbe016f.png" height="200" />
+    
+    2. 选择您需要的自习桌，单击“预约”按钮
+        
+        <img src="https://user-images.githubusercontent.com/7235968/33252313-690e77f4-d378-11e7-8d38-17c3c50d51fb.png" height="200" />
+    
+    3. 选择座椅号，选择预计到达时间，提交预约
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33252360-ad7b1aa0-d378-11e7-844d-62a045bb811e.png" height="200" />
 
-7. 用PHPStorm打开项目
+    4. 如果您当前可以预约该座位，您将会被跳转至“所有预约”页面。否则，您将被提示您为何在此时无法进行预约。
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33252880-b04cc7d0-d37b-11e7-8b42-2d315e0c81b8.png" height="200" />
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33252901-ceae822c-d37b-11e7-8a13-e4046740fa86.png" height="200" />
 
-8. 打开.env文件, 修改如下行 (若使用xampp可直接复制以下配置):
-    ```
-    DB_CONNECTION=mysql
-    DB_HOST=127.0.0.1
-    DB_PORT=3306
-    DB_DATABASE=library-reservation
-    DB_USERNAME=root
-    DB_PASSWORD=
-    ```
+    5. 如果您有预约无法成行，可以在“所有预约”页面取消该预约。每天可以取消的预约**不超过3次**。
 
-9. 迁移数据库:
-    ```
-    php artisan migrate
-    ```
+* **到馆签到：**
+    （为演示方便，可以在[测试页面](https://library.shinko.love/test/qr/)生成座位二维码。
+    1. 如图，生成二维码
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33253006-5dee7852-d37c-11e7-903c-f54a39a3970e.png" height="200" />
 
-10. 生成key:
-    ```
-    php artisan key:generate
-    ```
+    2. 使用手机微信扫描二维码，进入入座签到程序
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33253077-c2b59c3e-d37c-11e7-86ef-b7fefacf5562.png" height="200" />
 
-11. 打开浏览器, 访问http://localhost:8081, enjoy!
+    3. 若要离开座位，点击“离开”即可
+    
+        <img src="https://user-images.githubusercontent.com/7235968/33253126-ea012b64-d37c-11e7-9894-31f81847a005.png" height="200" />
 
+
+## Thanks to
+* [Laravel](https://laravel.com/)
+    > The PHP Framework For Web Artisans
+
+* [Hitokoto 一言](http://hitokoto.cn)
+    > 动漫也好、小说也好、网络也好，不论在哪里，我们总会看到有那么一两个句子能穿透你的心。
+
+* **马颖华老师及助教苏宇老师**
+
+* "图书馆预约占座系统"团队所有成员
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
-
-## 使用说明
-
-    图书馆预约系统前端网址为https://library.shinko.love/
-    用户需拥有jAccount账号，并使用jAccoun统一认证登录本系统。
-    登录系统后，用户可按照页面说明预约座位。
-    预约提交后可取消，但用户每天只有三次机会取消预约，超过三次将不能再次预约。
-    
-
